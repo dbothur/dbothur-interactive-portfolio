@@ -186,6 +186,7 @@ html,body,#sidebar,#chat-main,#chat-header,#input-area,#input-box,.card,.nav-ite
 
     <div class="sb-label" id="sb-general-label" data-testid="general-label">General</div>
     <div class="nav-item" onclick="processCmd('/whoami')" data-testid="nav-whoami"><span class="nav-icon nf nf-fa-id_card"></span><span data-i18n="navWhoami">Who am I</span></div>
+    <div class="nav-item" data-cmd="interests"  onclick="runNav('interests')"  data-testid="nav-interests">  <span class="nav-icon nf nf-fa-heart"></span><span data-i18n="navInterests">Interests</span></div>
 
     <div class="sb-label" id="sb-cv-label" style="margin-top:10px" data-testid="cv-sections-label">CV Sections</div>
     <div class="nav-item" data-cmd="about"      onclick="runNav('about')"      data-testid="nav-about">      <span class="nav-icon nf nf-fa-user"></span><span data-i18n="navAbout">About Me</span></div>
@@ -254,7 +255,7 @@ const T = {
     navWhoami:'Kim jestem',
     navClear:'Wyczyść czat',
     navAbout:'O mnie', navExperience:'Doświadczenie', navSkills:'Umiejętności',
-    navEducation:'Wykształcenie', navLanguages:'Języki', navContact:'Kontakt',
+    navEducation:'Wykształcenie', navLanguages:'Języki', navContact:'Kontakt', navInterests:'Zainteresowania',
     sidebarHint:'Wpisz <code style="color:var(--yw)">/help</code> po komendy<br><code style="color:var(--yw)">/generate-data</code><br>aby załadować dane',
     placeholder:'Wpisz komendę żeby dowiedzieć się czegoś na temat Dawida…',
     inputHint:'Enter aby wysłać \xb7 Shift+Enter nowa linia \xb7 Tab autouzupełnienie',
@@ -280,6 +281,8 @@ const T = {
     eduTitle:'Wykształcenie',
     eduDegree:'Technik-Informatyk',
 
+    interestsDesc:'Interesuję się nowinkami technologicznymi i sprzętowymi, konfiguracją systemów (ricing), grami komputerowymi oraz automatyzacją i optymalizacją codziennej pracy. W wolnym czasie śledzę filmy i seriale, zajmuję się grafiką komputerową, uprawiam sport i podróżuję.',
+
     langTitle:'Języki',
     langNative:'Ojczysty',
     whoamiLocation:'Ostr\xf3w Wielkopolski, Polska',
@@ -293,6 +296,7 @@ const T = {
     helpCmdsBasic:[
       ['/generate-data', 'załaduj dane moduł\xf3w /experience, /education, /skills, /languages, /contact'],
       ['/whoami',        'kim jestem'],
+      ['/interests',     'zainteresowania i hobby'],
       ['/clear',         'wyczyść czat'],
       ['/newchat',       'zrestartuj sesję - rozpocznij nowy czat'],
       ['/lang [pl|en]',  'zmień język interfejsu'],
@@ -307,10 +311,14 @@ const T = {
     ],
     helpFooter:'↑↓ historia \xb7 Tab autocomplete \xb7 kliknij sekcję w panelu bocznym',
 
+    newChatStarting:'Rozpoczynam nowy czat...',
+    loadingModules:'Ładowanie modułów...',
+    loadedOk:'załadowano pomyślnie w',
     alreadyLoaded:'<p style="color:var(--mu)">Wszystkie moduły są już załadowane.</p>',
     allLoaded:'Wszystkie dane załadowane.',
+    noDataLabel:'[ BRAK DANYCH ] dla modułu:',
     noDataMsg:'Moduł nie został załadowany. Uruchom:',
-    cmdNotFound:(cmd)=>`<p style="color:var(--rd)">command not found: <strong>${cmd}</strong></p><p style="color:var(--mu);font-size:13px;margin-top:4px">Wpisz <code style="color:var(--yw)">/help</code> aby zobaczyć listę komend.</p>`,
+    cmdNotFound:(cmd)=>`<p style="color:var(--rd)">nie znaleziono komendy: <strong>${cmd}</strong></p><p style="color:var(--mu);font-size:13px;margin-top:4px">Wpisz <code style="color:var(--yw)">/help</code> aby zobaczyć listę komend.</p>`,
     langSwitchedTo:'<p style="color:var(--gn)">Język zmieniony na <strong>Polski</strong>.</p>',
     langCurrent:(lang)=>`<p style="color:var(--mu)">Aktualny język: <strong>${lang==='pl'?'Polski':'English'}</strong>. Użyj <code style="color:var(--yw)">/lang pl</code> lub <code style="color:var(--yw)">/lang en</code>.</p>`,
     langInvalid:'<p style="color:var(--rd)">Nieprawidłowy język. Użyj: <code style="color:var(--yw)">/lang pl</code> lub <code style="color:var(--yw)">/lang en</code>.</p>',
@@ -324,7 +332,7 @@ const T = {
     navWhoami:'Who am I',
     navClear:'Clear Chat',
     navAbout:'About Me', navExperience:'Experience', navSkills:'Skills',
-    navEducation:'Education', navLanguages:'Languages', navContact:'Contact',
+    navEducation:'Education', navLanguages:'Languages', navContact:'Contact', navInterests:'Interests',
     sidebarHint:'Type <code style="color:var(--yw)">/help</code> for commands<br><code style="color:var(--yw)">/generate-data</code><br>to load data',
     placeholder:'Type a command to get some info about Dawid…',
     inputHint:'Enter to send \xb7 Shift+Enter new line \xb7 Tab autocomplete',
@@ -350,6 +358,8 @@ const T = {
     eduTitle:'Education',
     eduDegree:'IT Technician',
 
+    interestsDesc:'I am interested in technology and hardware news, system configuration (ricing), computer games, and automation and optimization of daily work. In my free time I follow movies and series, do computer graphics, play sports and travel.',
+
     langTitle:'Languages',
     langNative:'Native',
     whoamiLocation:'Ostr\xf3w Wielkopolski, Poland',
@@ -363,6 +373,7 @@ const T = {
     helpCmdsBasic:[
       ['/generate-data', 'load module data for /experience, /education, /skills, /languages, /contact'],
       ['/whoami',        'who am I'],
+      ['/interests',     'interests & hobbies'],
       ['/clear',         'clear chat'],
       ['/newchat',       'restart session - start a new chat'],
       ['/lang [pl|en]',  'change interface language'],
@@ -377,8 +388,12 @@ const T = {
     ],
     helpFooter:'↑↓ history \xb7 Tab autocomplete \xb7 click section in sidebar',
 
+    newChatStarting:'Starting new chat...',
+    loadingModules:'Loading modules...',
+    loadedOk:'loaded successfully in',
     alreadyLoaded:'<p style="color:var(--mu)">All modules are already loaded.</p>',
     allLoaded:'All data loaded.',
+    noDataLabel:'[ NO DATA ] for module:',
     noDataMsg:'Module not loaded. Run:',
     cmdNotFound:(cmd)=>`<p style="color:var(--rd)">command not found: <strong>${cmd}</strong></p><p style="color:var(--mu);font-size:13px;margin-top:4px">Type <code style="color:var(--yw)">/help</code> to see available commands.</p>`,
     langSwitchedTo:'<p style="color:var(--gn)">Language switched to <strong>English</strong>.</p>',
@@ -447,7 +462,7 @@ function asstMsg(html){
 
 /* ── no-data guard ───────────────────────────── */
 function noData(name){
-  return `<p style="color:var(--rd);margin-bottom:6px">[ NO DATA ] — module: <strong>${e(name.toUpperCase())}</strong></p>
+  return `<p style="color:var(--rd);margin-bottom:6px">${e(l('noDataLabel'))} <strong>${e(name.toUpperCase())}</strong></p>
           <p style="color:var(--mu);font-size:13px">${e(l('noDataMsg'))}</p>
           <p style="margin-top:6px"><code style="color:var(--yw);font-family:'JetBrains Mono',monospace">/generate-data</code></p>`;
 }
@@ -520,6 +535,11 @@ function buildLanguages(){
     <div class="irow"><span class="ilabel">🇬🇧 English</span><span style="color:var(--bl)">B2</span></div>`;
 }
 
+function buildInterests(){
+  return `<div class="sec-title">${e(l('navInterests'))}</div>
+    <p style="font-size:14px;line-height:1.8;color:var(--tx)">${e(l('interestsDesc'))}</p>`;
+}
+
 function buildHelp(){
   const grid=(cmds)=>`<div class="help-grid">${cmds.map(([c,d])=>`<div class="hcmd">${e(c)}</div><div class="hdesc">${e(d)}</div>`).join('')}</div>`;
   return `<div class="sec-title">${e(l('helpTitle'))}</div>
@@ -557,14 +577,14 @@ async function cmdNpx(){
   </div>`;
   msgsEl.appendChild(wrap);
   const cel=document.getElementById('_npx');
-  const lines=[`<span style="color:var(--mu)">Loading modules...</span>`];
+  const lines=[`<span style="color:var(--mu)">${e(l('loadingModules'))}</span>`];
   cel.innerHTML=lines.join('<br>'); sc();
   await new Promise(res=>{
     let i=0;
     const iv=setInterval(()=>{
       if(i<mods.length){
         const ms=Math.floor(Math.random()*120+80);
-        lines.push(`<span style="color:var(--gn)">✓</span> <span style="color:var(--mu)">[INFO][</span><span style="color:var(--gn)">${mods[i]}.module</span><span style="color:var(--mu)">] → loaded successfully  ${ms}ms</span>`);
+        lines.push(`<span style="color:var(--gn)">✓</span> <span style="color:var(--mu)">[INFO][</span><span style="color:var(--gn)">${mods[i]}.module</span><span style="color:var(--mu)">] → ${e(l('loadedOk'))}  ${ms}ms</span>`);
         cel.innerHTML=lines.join('<br>'); sc(); i++;
       } else {
         clearInterval(iv); loaded=true;
@@ -592,9 +612,9 @@ function setActiveNav(cmd){
 }
 
 /* ── command dispatch ────────────────────────── */
-const TAB_CMDS=['/about','/contact','/skills','/experience','/education','/languages','/whoami','/help','/clear','/newchat','/generate-data','/lang'];
-const NAV_CMDS=new Set(['about','contact','skills','experience','education','languages']);
-const BUILDERS={about:buildAbout,contact:buildContact,skills:buildSkills,experience:buildExperience,education:buildEducation,languages:buildLanguages,whoami:buildWhoami,help:buildHelp};
+const TAB_CMDS=['/about','/contact','/skills','/experience','/education','/languages','/interests','/whoami','/help','/clear','/newchat','/generate-data','/lang'];
+const NAV_CMDS=new Set(['about','contact','skills','experience','education','languages','interests']);
+const BUILDERS={about:buildAbout,contact:buildContact,skills:buildSkills,experience:buildExperience,education:buildEducation,languages:buildLanguages,interests:buildInterests,whoami:buildWhoami,help:buildHelp};
 
 async function processCmd(raw){
   if(!raw.trim()) return;
@@ -613,7 +633,7 @@ async function processCmd(raw){
   } else if(cmd==='clear'){
     msgsEl.innerHTML='';
   } else if(cmd==='newchat'){
-    asstMsg('<p style="color:var(--mu)">Starting new chat...</p>');
+    asstMsg(`<p style="color:var(--mu)">${e(l('newChatStarting'))}</p>`);
     setTimeout(()=>{
       msgsEl.innerHTML=''; loaded=false; hist=[]; hidx=-1; inp.value='';
       const gb=document.getElementById('sb-gen-btn');
