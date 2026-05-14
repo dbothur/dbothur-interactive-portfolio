@@ -584,7 +584,7 @@ async function processCmd(raw){
   sc();
 }
 
-function runNav(cmd){ hist.unshift('/'+cmd); hidx=-1; processCmd('/'+cmd); inp.focus(); }
+function runNav(cmd){ hist.unshift('/'+cmd); hidx=-1; processCmd('/'+cmd); }
 function cmdReboot(){ processCmd('/newchat'); }
 
 /* ── input events ────────────────────────────── */
@@ -613,7 +613,6 @@ sendEl.addEventListener('click',()=>{
   hist.unshift(raw); hidx=-1; inp.value=''; autoResize(); processCmd(raw);
 });
 
-document.addEventListener('click',ev=>{ if(!ev.target.closest('#sidebar')) inp.focus(); });
 
 /* ── boot ────────────────────────────────────── */
 async function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
@@ -631,7 +630,6 @@ async function bootSequence(){
     `<div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;line-height:1.2;color:var(--tx);white-space:pre;overflow-x:auto;margin-bottom:16px">${ascii}</div>`+
     buildHelp()
   );
-  inp.focus();
 }
 
 function toggleSidebar(){
