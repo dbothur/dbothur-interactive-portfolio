@@ -27,6 +27,14 @@
 [data-theme="light"] .tr{background:#f5e5e5;border-color:#d8a0a0;color:#8a1a1a}
 [data-theme="light"] .tp{background:#f0e8f5;border-color:#c0a0d8;color:#4a2080}
 [data-theme="light"] .sb-label{color:var(--tx)}
+[data-theme="light"] .sb-btn{background:var(--ac);border-color:var(--ac);color:var(--btn-tx)}
+[data-theme="light"] .sb-btn:hover{background:#6a5e54;border-color:#6a5e54}
+[data-theme="light"] .sb-btn-clear{background:var(--rd);border-color:var(--rd);color:var(--btn-tx)}
+[data-theme="light"] .sb-btn-clear:hover{background:#7a1a1a;border-color:#7a1a1a}
+[data-theme="light"] .sb-btn-gen{background:var(--yw);border-color:var(--yw);color:var(--btn-tx)}
+[data-theme="light"] .sb-btn-gen:hover{background:#5c3600;border-color:#5c3600}
+[data-theme="light"] .sb-btn-gen.gen-done{background:var(--gn);border-color:var(--gn);color:var(--btn-tx);opacity:.85}
+[data-theme="light"] .sb-btn-gen.gen-done:hover{background:var(--gn);border-color:var(--gn)}
 html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Inter',system-ui,sans-serif;font-size:14px;line-height:1.6;overflow:hidden}
 
 /* ── layout ─────────────────────────────────── */
@@ -59,6 +67,13 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Inter',s
 .sb-role{font-size:11px;color:var(--mu)}
 .sb-btn{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;margin-bottom:4px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--tx);font-size:13px;cursor:pointer;font-family:inherit;transition:background .15s;text-align:left}
 .sb-btn:hover{background:var(--s1)}
+.sb-btn .nav-icon,.sb-btn-gen .nav-icon{font-size:13px;width:auto}
+.sb-btn-clear{color:var(--rd);border-color:var(--rd)}
+.sb-btn-clear:hover{background:rgba(184,64,64,.10)}
+.sb-btn-gen{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;margin-bottom:10px;border-radius:8px;border:1px solid var(--yw);background:transparent;color:var(--yw);font-size:13px;cursor:pointer;font-family:inherit;transition:background .15s,color .2s,border-color .2s,opacity .2s;text-align:left}
+.sb-btn-gen:hover{background:rgba(184,152,64,.10)}
+.sb-btn-gen.gen-done{color:var(--gn);border-color:var(--gn);cursor:default;opacity:.65}
+.sb-btn-gen.gen-done:hover{background:transparent}
 .sb-label{font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.07em;padding:8px 10px 4px}
 .nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--mu);transition:all .15s;user-select:none}
 .nav-item:hover{background:var(--s1);color:var(--tx)}
@@ -165,9 +180,14 @@ html,body,#sidebar,#chat-main,#chat-header,#input-area,#input-box,.card,.nav-ite
       <button id="sb-toggle" title="Toggle sidebar" style="margin-left:auto" data-testid="sidebar-toggle-btn">☰</button>
     </div>
 
-    <button class="sb-btn" onclick="cmdReboot()" data-testid="new-chat-btn">✦&nbsp; <span id="sb-newchat-label" data-testid="new-chat-label">New Chat</span></button>
+    <button class="sb-btn" onclick="cmdReboot()" data-testid="new-chat-btn"><span class="nav-icon">✦</span><span id="sb-newchat-label" data-testid="new-chat-label">New Chat</span></button>
+    <button class="sb-btn sb-btn-clear" onclick="processCmd('/clear')" data-testid="clear-chat-btn"><span class="nav-icon nf nf-fa-eraser"></span><span data-i18n="navClear">Clear Chat</span></button>
+    <button id="sb-gen-btn" class="sb-btn-gen" onclick="processCmd('/generate-data')" data-testid="generate-data-btn"><span id="sb-gen-icon" class="nav-icon nf nf-cod-database"></span><span id="sb-gen-label">Generate Data</span></button>
 
-    <div class="sb-label" id="sb-cv-label" data-testid="cv-sections-label">CV Sections</div>
+    <div class="sb-label" id="sb-general-label" data-testid="general-label">General</div>
+    <div class="nav-item" onclick="processCmd('/whoami')" data-testid="nav-whoami"><span class="nav-icon nf nf-fa-id_card"></span><span data-i18n="navWhoami">Who am I</span></div>
+
+    <div class="sb-label" id="sb-cv-label" style="margin-top:10px" data-testid="cv-sections-label">CV Sections</div>
     <div class="nav-item" data-cmd="about"      onclick="runNav('about')"      data-testid="nav-about">      <span class="nav-icon nf nf-fa-user"></span><span data-i18n="navAbout">About Me</span></div>
     <div class="nav-item" data-cmd="experience" onclick="runNav('experience')" data-testid="nav-experience"> <span class="nav-icon nf nf-fa-briefcase"></span><span data-i18n="navExperience">Experience</span></div>
     <div class="nav-item" data-cmd="skills"     onclick="runNav('skills')"     data-testid="nav-skills">     <span class="nav-icon nf nf-fa-wrench"></span><span data-i18n="navSkills">Skills</span></div>
@@ -227,7 +247,12 @@ let hist = [], hidx = -1;
 const T = {
   pl: {
     newChat:'Nowy czat',
+    genDataBtn:'Generuj dane',
+    genDataDone:'Dane załadowane',
     cvSections:'Sekcje CV',
+    navGeneral:'Ogólne',
+    navWhoami:'Kim jestem',
+    navClear:'Wyczyść czat',
     navAbout:'O mnie', navExperience:'Doświadczenie', navSkills:'Umiejętności',
     navEducation:'Wykształcenie', navLanguages:'Języki', navContact:'Kontakt',
     sidebarHint:'Wpisz <code style="color:var(--yw)">/help</code> po komendy<br><code style="color:var(--yw)">/generate-data</code><br>aby załadować dane',
@@ -263,18 +288,22 @@ const T = {
     skillsCats:['Testowanie','Narzędzia','API','Baza danych','OS / Infrastruktura','Narzędzia PM','AI','Kod'],
 
     helpTitle:'Dostępne Komendy',
-    helpCmds:[
+    helpSectionBasic:'Zawsze dostępne',
+    helpSectionData:'Wymaga /generate-data',
+    helpCmdsBasic:[
       ['/generate-data', 'załaduj dane moduł\xf3w /experience, /education, /skills, /languages, /contact'],
       ['/whoami',        'kim jestem'],
       ['/clear',         'wyczyść czat'],
       ['/newchat',       'zrestartuj sesję - rozpocznij nowy czat'],
+      ['/lang [pl|en]',  'zmień język interfejsu'],
+    ],
+    helpCmdsData:[
       ['/about',         'o mnie, czym się aktualnie zajmuję'],
       ['/experience',    'doświadczenie zawodowe'],
       ['/education',     'wykształcenie'],
       ['/skills',        'umiejętności techniczne'],
       ['/languages',     'języki'],
       ['/contact',       'dane kontaktowe'],
-      ['/lang [pl|en]',  'zmień język interfejsu'],
     ],
     helpFooter:'↑↓ historia \xb7 Tab autocomplete \xb7 kliknij sekcję w panelu bocznym',
 
@@ -288,7 +317,12 @@ const T = {
   },
   en: {
     newChat:'New Chat',
+    genDataBtn:'Generate Data',
+    genDataDone:'Data loaded',
     cvSections:'CV Sections',
+    navGeneral:'General',
+    navWhoami:'Who am I',
+    navClear:'Clear Chat',
     navAbout:'About Me', navExperience:'Experience', navSkills:'Skills',
     navEducation:'Education', navLanguages:'Languages', navContact:'Contact',
     sidebarHint:'Type <code style="color:var(--yw)">/help</code> for commands<br><code style="color:var(--yw)">/generate-data</code><br>to load data',
@@ -324,18 +358,22 @@ const T = {
     skillsCats:['Testing','Tools','API','Database','OS / Infra','PM Tools','AI','Code'],
 
     helpTitle:'Available Commands',
-    helpCmds:[
+    helpSectionBasic:'Always available',
+    helpSectionData:'Requires /generate-data',
+    helpCmdsBasic:[
       ['/generate-data', 'load module data for /experience, /education, /skills, /languages, /contact'],
       ['/whoami',        'who am I'],
       ['/clear',         'clear chat'],
       ['/newchat',       'restart session - start a new chat'],
+      ['/lang [pl|en]',  'change interface language'],
+    ],
+    helpCmdsData:[
       ['/about',         'about me, what I currently do'],
       ['/experience',    'work experience'],
       ['/education',     'education'],
       ['/skills',        'technical skills'],
       ['/languages',     'languages'],
       ['/contact',       'contact information'],
-      ['/lang [pl|en]',  'change interface language'],
     ],
     helpFooter:'↑↓ history \xb7 Tab autocomplete \xb7 click section in sidebar',
 
@@ -360,7 +398,10 @@ function applyLangUI(next){
   langBtn.className = currentLang === 'pl' ? 'lang-pl' : 'lang-en';
   document.getElementById('sb-hint').innerHTML = l('sidebarHint');
   document.getElementById('sb-cv-label').textContent = l('cvSections');
+  document.getElementById('sb-general-label').textContent = l('navGeneral');
   document.getElementById('sb-newchat-label').textContent = l('newChat');
+  const genLbl = document.getElementById('sb-gen-label');
+  if(genLbl) genLbl.textContent = loaded ? l('genDataDone') : l('genDataBtn');
   document.getElementById('input-hint').textContent = l('inputHint');
   inp.placeholder = l('placeholder');
   document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -480,8 +521,12 @@ function buildLanguages(){
 }
 
 function buildHelp(){
+  const grid=(cmds)=>`<div class="help-grid">${cmds.map(([c,d])=>`<div class="hcmd">${e(c)}</div><div class="hdesc">${e(d)}</div>`).join('')}</div>`;
   return `<div class="sec-title">${e(l('helpTitle'))}</div>
-    <div class="help-grid">${l('helpCmds').map(([c,d])=>`<div class="hcmd">${e(c)}</div><div class="hdesc">${e(d)}</div>`).join('')}</div>
+    <div class="sg-label" style="margin-bottom:6px">${e(l('helpSectionBasic'))}</div>
+    ${grid(l('helpCmdsBasic'))}
+    <div class="sg-label" style="margin-top:24px;margin-bottom:6px">${e(l('helpSectionData'))}</div>
+    ${grid(l('helpCmdsData'))}
     <p style="color:var(--mu);font-size:12px;margin-top:12px">${e(l('helpFooter'))}</p>`;
 }
 
@@ -526,7 +571,14 @@ async function cmdNpx(){
         lines.push('');
         lines.push(`<span style="color:var(--gn);font-weight:700">✓ 6 loaded</span> <span style="color:var(--mu)">(6 modules)</span>`);
         lines.push(`<span style="color:var(--gn)">▶</span> <span style="color:var(--mu)">${e(l('allLoaded'))}</span>`);
-        cel.innerHTML=lines.join('<br>'); sc(); res();
+        cel.innerHTML=lines.join('<br>'); sc();
+        const gb=document.getElementById('sb-gen-btn');
+        if(gb){gb.classList.add('gen-done');gb.disabled=true;}
+        const gi=document.getElementById('sb-gen-icon');
+        if(gi){gi.className='nav-icon nf nf-fa-check';}
+        const gl=document.getElementById('sb-gen-label');
+        if(gl){gl.textContent=l('genDataDone');}
+        res();
       }
     },220);
   });
@@ -562,7 +614,16 @@ async function processCmd(raw){
     msgsEl.innerHTML='';
   } else if(cmd==='newchat'){
     asstMsg('<p style="color:var(--mu)">Starting new chat...</p>');
-    setTimeout(()=>{ msgsEl.innerHTML=''; loaded=false; hist=[]; hidx=-1; inp.value=''; bootSequence(); },400);
+    setTimeout(()=>{
+      msgsEl.innerHTML=''; loaded=false; hist=[]; hidx=-1; inp.value='';
+      const gb=document.getElementById('sb-gen-btn');
+      if(gb){gb.classList.remove('gen-done');gb.disabled=false;}
+      const gi=document.getElementById('sb-gen-icon');
+      if(gi){gi.className='nav-icon nf nf-cod-database';}
+      const gl=document.getElementById('sb-gen-label');
+      if(gl){gl.textContent=l('genDataBtn');}
+      bootSequence();
+    },400);
   } else if(cmd==='lang'){
     const arg=parts[1];
     if(!arg){
