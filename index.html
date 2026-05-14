@@ -201,10 +201,7 @@ html,body,#sidebar,#chat-main,#chat-header,#input-area,#input-box,.card,.nav-ite
     <div class="nav-item" data-cmd="contact"    onclick="runNav('contact')"    data-testid="nav-contact">    <span class="nav-icon nf nf-fa-envelope"></span><span data-i18n="navContact">Contact</span></div>
 
     <div class="sb-footer" data-testid="sidebar-footer">
-      <div class="sb-hint" id="sb-hint" data-testid="sidebar-hint">
-        Type <code style="color:var(--yw)">/help</code> for commands<br>
-        <code style="color:var(--yw)">/generate-data</code><br>to load data
-      </div>
+      <button class="sb-btn" onclick="runNav('help')" data-testid="help-btn"><span class="nav-icon nf nf-fa-question_circle"></span><span data-i18n="navHelp">Help</span></button>
     </div>
   </aside>
 
@@ -259,7 +256,7 @@ const T = {
     navWhoami:'Kim jestem',
     navClear:'Wyczyść czat',
     navAbout:'O mnie', navExperience:'Doświadczenie', navSkills:'Umiejętności',
-    navEducation:'Wykształcenie', navLanguages:'Języki', navContact:'Kontakt', navInterests:'Zainteresowania',
+    navEducation:'Wykształcenie', navLanguages:'Języki', navContact:'Kontakt', navInterests:'Zainteresowania', navHelp:'Pomoc',
     sidebarHint:'Wpisz <code style="color:var(--yw)">/help</code> po komendy<br><code style="color:var(--yw)">/generate-data</code><br>aby załadować dane',
     placeholder:'Wpisz komendę żeby dowiedzieć się czegoś na temat Dawida…',
     inputHint:'Enter aby wysłać \xb7 Shift+Enter nowa linia \xb7 Tab autouzupełnienie',
@@ -336,7 +333,7 @@ const T = {
     navWhoami:'Who am I',
     navClear:'Clear Chat',
     navAbout:'About Me', navExperience:'Experience', navSkills:'Skills',
-    navEducation:'Education', navLanguages:'Languages', navContact:'Contact', navInterests:'Interests',
+    navEducation:'Education', navLanguages:'Languages', navContact:'Contact', navInterests:'Interests', navHelp:'Help',
     sidebarHint:'Type <code style="color:var(--yw)">/help</code> for commands<br><code style="color:var(--yw)">/generate-data</code><br>to load data',
     placeholder:'Type a command to get some info about Dawid…',
     inputHint:'Enter to send \xb7 Shift+Enter new line \xb7 Tab autocomplete',
@@ -415,8 +412,7 @@ function applyLangUI(next){
   const langBtn = document.getElementById('lang-btn');
   langBtn.textContent = currentLang === 'pl' ? 'PL' : 'EN';
   langBtn.className = currentLang === 'pl' ? 'lang-pl' : 'lang-en';
-  document.getElementById('sb-hint').innerHTML = l('sidebarHint');
-  document.getElementById('sb-cv-label').textContent = l('cvSections');
+document.getElementById('sb-cv-label').textContent = l('cvSections');
   document.getElementById('sb-general-label').textContent = l('navGeneral');
   document.getElementById('sb-newchat-label').textContent = l('newChat');
   const genLbl = document.getElementById('sb-gen-label');
