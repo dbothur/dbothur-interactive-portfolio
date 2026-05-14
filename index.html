@@ -1,17 +1,32 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="pl" id="html-root">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dawid Bothur — Portfolio</title>
+<title>Dawid Bothur | Portfolio</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://www.nerdfonts.com/assets/css/webfont.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --sb:#171717;--bg:#1e1e1e;--s1:#242424;--s2:#2a2a2a;--bd:#2e2e2e;
-  --tx:#ececec;--mu:#8e8ea0;--ac:#d97757;--acd:rgba(217,119,87,.13);
-  --gn:#4ade80;--bl:#60a5fa;--yw:#fbbf24;--rd:#f87171;--pp:#a78bfa;
+  --sb:#080808;--bg:#0d0d0d;--s1:#131313;--s2:#191919;--bd:#202020;
+  --tx:#e0e0e0;--mu:#636368;--ac:#c2bab0;--acd:rgba(194,186,176,.09);
+  --gn:#5a9e70;--bl:#5880a8;--yw:#b89840;--rd:#b84040;--pp:#7860b8;
+  --btn-tx:#0d0d0d;
 }
+[data-theme="light"]{
+  --sb:#f2f2f2;--bg:#fafafa;--s1:#ebebeb;--s2:#e3e3e3;--bd:#d0d0d0;
+  --tx:#1c1c1e;--mu:#5c5c64;--ac:#7a6e64;--acd:rgba(122,110,100,.10);
+  --gn:#2e7d4f;--bl:#2a5f9e;--yw:#7a4800;--rd:#9e2a2a;--pp:#5a3a9e;
+  --btn-tx:#fafafa;
+}
+[data-theme="light"] .tg{background:#e8f5ee;border-color:#b8ddc8;color:#1a6a40}
+[data-theme="light"] .tb{background:#e8f0f8;border-color:#b8cce0;color:#1a4a7a}
+[data-theme="light"] .ty{background:#f5f0e0;border-color:#dfd080;color:#6a5010}
+[data-theme="light"] .tc{background:#e5f5f0;border-color:#a0d8cc;color:#0a5a40}
+[data-theme="light"] .tr{background:#f5e5e5;border-color:#d8a0a0;color:#8a1a1a}
+[data-theme="light"] .tp{background:#f0e8f5;border-color:#c0a0d8;color:#4a2080}
+[data-theme="light"] .sb-label{color:var(--tx)}
 html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Inter',system-ui,sans-serif;font-size:14px;line-height:1.6;overflow:hidden}
 
 /* ── layout ─────────────────────────────────── */
@@ -22,9 +37,24 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Inter',s
   width:256px;flex-shrink:0;background:var(--sb);
   border-right:1px solid var(--bd);
   display:flex;flex-direction:column;padding:12px 8px;
+  overflow:hidden;
 }
+#sidebar.collapsed{width:0;padding:0;border-right:none}
+.genie-out{overflow:visible!important;transform-origin:top right;animation:genie-out .3s ease-in forwards}
+.genie-in {overflow:visible!important;transform-origin:top right;animation:genie-in .35s ease-out forwards}
+@keyframes genie-out{
+  0%  {transform:scale(1);  opacity:1}
+  100%{transform:scale(0);  opacity:0}
+}
+@keyframes genie-in{
+  0%  {transform:scale(0);  opacity:0}
+  100%{transform:scale(1);  opacity:1}
+}
+#sb-toggle,#sb-open{background:transparent;border:none;color:var(--mu);cursor:pointer;width:32px;height:32px;border-radius:6px;font-size:18px;line-height:1;flex-shrink:0;transition:color .15s;display:flex;align-items:center;justify-content:center}
+#sb-toggle:hover,#sb-open:hover{color:var(--tx)}
 .sb-top{display:flex;align-items:center;gap:10px;padding:8px 10px 14px;border-bottom:1px solid var(--bd);margin-bottom:6px}
-.db-icon{width:34px;height:34px;border-radius:8px;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.db-icon{width:34px;height:34px;border-radius:8px;overflow:hidden;flex-shrink:0;cursor:pointer}
+.db-icon img{width:100%;height:100%;object-fit:cover;display:block}
 .sb-name{font-weight:600;font-size:14px;color:var(--tx);line-height:1.2}
 .sb-role{font-size:11px;color:var(--mu)}
 .sb-btn{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;margin-bottom:4px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--tx);font-size:13px;cursor:pointer;font-family:inherit;transition:background .15s;text-align:left}
@@ -39,10 +69,15 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Inter',s
 
 /* ── main ────────────────────────────────────── */
 #chat-main{flex:1;min-width:0;display:flex;flex-direction:column}
-#chat-header{padding:13px 24px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;flex-shrink:0}
-.hdr-icon{width:28px;height:28px;border-radius:6px;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+#chat-header{padding:13px 24px 13px 12px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.hdr-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--tx)}
 .hdr-title{font-weight:600;font-size:15px}
 .hdr-badge{margin-left:auto;font-size:12px;color:var(--mu);background:var(--s1);border:1px solid var(--bd);padding:3px 10px;border-radius:20px}
+#lang-btn{background:transparent;border:1px solid;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:600;letter-spacing:.06em;cursor:pointer;font-family:inherit;transition:all .15s;flex-shrink:0}
+#lang-btn.lang-pl{background:var(--rd);border-color:var(--rd);color:#fff}
+#lang-btn.lang-pl:hover{opacity:.8}
+#lang-btn.lang-en{background:var(--bl);border-color:var(--bl);color:#fff}
+#lang-btn.lang-en:hover{opacity:.8}
 
 /* ── messages ────────────────────────────────── */
 #messages{flex:1;overflow-y:auto;padding:20px 0 8px}
@@ -54,7 +89,8 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Inter',s
 
 .msg-asst{padding:5px 24px}
 .msg-asst-inner{display:flex;gap:12px;align-items:flex-start;max-width:780px}
-.avatar{width:32px;height:32px;border-radius:8px;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;margin-top:2px}
+.avatar{width:32px;height:32px;border-radius:8px;overflow:hidden;flex-shrink:0;margin-top:2px}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
 .msg-body{flex:1;min-width:0;padding-top:2px}
 .msg-sender{font-size:13px;font-weight:600;color:var(--ac);margin-bottom:6px}
 .msg-content{font-size:14px;line-height:1.7}
@@ -87,11 +123,11 @@ a:hover{text-decoration:underline}
 
 /* ── input ───────────────────────────────────── */
 #input-area{padding:12px 24px 18px;flex-shrink:0}
-#input-box{max-width:780px;background:var(--s2);border:1px solid var(--bd);border-radius:14px;display:flex;align-items:flex-end;gap:8px;padding:10px 12px;transition:border-color .2s}
+#input-box{max-width:780px;background:var(--s2);border:1px solid var(--bd);border-radius:14px;display:flex;align-items:center;gap:8px;padding:10px 12px;transition:border-color .2s}
 #input-box:focus-within{border-color:var(--ac)}
 #chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--tx);font-family:'JetBrains Mono',monospace;font-size:13px;resize:none;min-height:22px;max-height:160px;line-height:1.5;caret-color:var(--ac)}
 #chat-input::placeholder{color:var(--mu)}
-#send-btn{width:34px;height:34px;background:var(--ac);border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:18px;font-weight:700;transition:opacity .15s;line-height:1}
+#send-btn{width:34px;height:34px;background:var(--ac);border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--btn-tx);font-size:18px;font-weight:700;transition:opacity .15s;line-height:1}
 #send-btn:hover{opacity:.85}
 .input-hint{font-size:11px;color:var(--mu);margin-top:6px;max-width:780px}
 
@@ -101,33 +137,46 @@ a:hover{text-decoration:underline}
 .typing span:nth-child(2){animation-delay:.18s}
 .typing span:nth-child(3){animation-delay:.36s}
 @keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-5px);opacity:1}}
+
+/* ── theme transition ────────────────────────── */
+html,body,#sidebar,#chat-main,#chat-header,#input-area,#input-box,.card,.nav-item,.bubble,.tag,.sb-btn,.hdr-badge{transition:background-color .18s,color .18s,border-color .18s}
+.theme-switch{display:flex;align-items:center;cursor:pointer;flex-shrink:0;user-select:none}
+.theme-switch input{display:none}
+.sw-track{width:44px;height:24px;background:var(--s2);border:1px solid var(--bd);border-radius:12px;position:relative;flex-shrink:0;transition:background .22s,border-color .22s}
+#theme-toggle:checked~.sw-track{background:var(--pp);border-color:var(--pp)}
+.sw-thumb{position:absolute;top:3px;left:3px;width:16px;height:16px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;box-shadow:0 1px 3px rgba(0,0,0,.28);transition:transform .22s}
+#theme-toggle:checked~.sw-track .sw-thumb{transform:translateX(20px)}
+.sw-moon{display:none;color:#1c1c3a}.sw-sun{display:block;color:#e08000}
+#theme-toggle:checked~.sw-track .sw-moon{display:block}
+#theme-toggle:checked~.sw-track .sw-sun{display:none}
 </style>
 </head>
 <body>
-<div id="app">
+<div id="app" data-testid="app">
 
   <!-- SIDEBAR -->
-  <aside id="sidebar">
-    <div class="sb-top">
-      <div class="db-icon">DB</div>
-      <div>
-        <div class="sb-name">Dawid Bothur</div>
-        <div class="sb-role">Software Tester</div>
+  <aside id="sidebar" data-testid="sidebar">
+    <div class="sb-top" data-testid="sidebar-top">
+      <a href="https://github.com/dbothur" target="_blank" rel="noopener noreferrer" title="GitHub profile" data-testid="github-profile-link"><div class="db-icon" data-testid="avatar-icon"><img src="https://github.com/dbothur.png" alt="DB" data-testid="avatar-img"></div></a>
+      <div data-testid="profile-info">
+        <div class="sb-name" data-testid="profile-name">Dawid Bothur</div>
+        <div class="sb-role" data-testid="profile-role">Software Tester</div>
       </div>
+      <button id="sb-toggle" title="Toggle sidebar" style="margin-left:auto" data-testid="sidebar-toggle-btn">☰</button>
     </div>
 
-    <button class="sb-btn" onclick="cmdReboot()">✦&nbsp; New Chat</button>
+    <button class="sb-btn" onclick="cmdReboot()" data-testid="new-chat-btn">✦&nbsp; <span id="sb-newchat-label" data-testid="new-chat-label">New Chat</span></button>
 
-    <div class="sb-label">CV Sections</div>
-    <div class="nav-item" data-cmd="about"      onclick="runNav('about')">      <span class="nav-icon">👤</span>About Me</div>
-    <div class="nav-item" data-cmd="experience" onclick="runNav('experience')"> <span class="nav-icon">💼</span>Experience</div>
-    <div class="nav-item" data-cmd="skills"     onclick="runNav('skills')">     <span class="nav-icon">🧪</span>Skills</div>
-    <div class="nav-item" data-cmd="education"  onclick="runNav('education')">  <span class="nav-icon">🎓</span>Education</div>
-    <div class="nav-item" data-cmd="languages"  onclick="runNav('languages')">  <span class="nav-icon">🌐</span>Languages</div>
-    <div class="nav-item" data-cmd="contact"    onclick="runNav('contact')">    <span class="nav-icon">✉</span>Contact</div>
+    <div class="sb-label" id="sb-cv-label" data-testid="cv-sections-label">CV Sections</div>
+    <div class="nav-item" data-cmd="about"      onclick="runNav('about')"      data-testid="nav-about">      <span class="nav-icon nf nf-fa-user"></span><span data-i18n="navAbout">About Me</span></div>
+    <div class="nav-item" data-cmd="experience" onclick="runNav('experience')" data-testid="nav-experience"> <span class="nav-icon nf nf-fa-briefcase"></span><span data-i18n="navExperience">Experience</span></div>
+    <div class="nav-item" data-cmd="skills"     onclick="runNav('skills')"     data-testid="nav-skills">     <span class="nav-icon nf nf-fa-wrench"></span><span data-i18n="navSkills">Skills</span></div>
+    <div class="nav-item" data-cmd="education"  onclick="runNav('education')"  data-testid="nav-education">  <span class="nav-icon nf nf-fa-graduation_cap"></span><span data-i18n="navEducation">Education</span></div>
+    <div class="nav-item" data-cmd="languages"  onclick="runNav('languages')"  data-testid="nav-languages">  <span class="nav-icon nf nf-fa-language"></span><span data-i18n="navLanguages">Languages</span></div>
+    <div class="nav-item" data-cmd="contact"    onclick="runNav('contact')"    data-testid="nav-contact">    <span class="nav-icon nf nf-fa-envelope"></span><span data-i18n="navContact">Contact</span></div>
 
-    <div class="sb-footer">
-      <div class="sb-hint">
+    <div class="sb-footer" data-testid="sidebar-footer">
+      <div class="sb-hint" id="sb-hint" data-testid="sidebar-hint">
         Type <code style="color:var(--yw)">/help</code> for commands<br>
         <code style="color:var(--yw)">/generate-data</code><br>to load data
       </div>
@@ -135,21 +184,32 @@ a:hover{text-decoration:underline}
   </aside>
 
   <!-- MAIN -->
-  <main id="chat-main">
-    <div id="chat-header">
-      <div class="hdr-icon">DB</div>
-      <div class="hdr-title">Dawid Bothur — Portfolio</div>
-      <div class="hdr-badge">Regular Software Tester</div>
+  <main id="chat-main" data-testid="chat-main">
+    <div id="chat-header" data-testid="chat-header">
+      <button id="sb-open" title="Open sidebar" style="display:none" data-testid="sidebar-open-btn">☰</button>
+      <div class="hdr-icon" data-testid="header-icon"><svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></div>
+      <div class="hdr-title" data-testid="header-title">Dawid Bothur - Portfolio</div>
+      <div class="hdr-badge" data-testid="header-badge">Regular Software Tester</div>
+      <label class="theme-switch" title="Toggle light/dark mode" data-testid="theme-switch">
+        <input type="checkbox" id="theme-toggle" onchange="toggleTheme()" data-testid="theme-toggle-input">
+        <span class="sw-track" data-testid="theme-switch-track">
+          <span class="sw-thumb" data-testid="theme-switch-thumb">
+            <span class="sw-moon" data-testid="theme-moon-icon">☾</span>
+            <span class="sw-sun" data-testid="theme-sun-icon">☀</span>
+          </span>
+        </span>
+      </label>
+      <button id="lang-btn" class="lang-pl" onclick="switchLang()" title="Switch language" data-testid="lang-btn">PL</button>
     </div>
 
-    <div id="messages"></div>
+    <div id="messages" data-testid="messages-container"></div>
 
-    <div id="input-area">
-      <div id="input-box">
-        <textarea id="chat-input" rows="1" placeholder="Type a command or ask about Dawid…" autocomplete="off" spellcheck="false"></textarea>
-        <button id="send-btn" title="Send">↑</button>
+    <div id="input-area" data-testid="input-area">
+      <div id="input-box" data-testid="input-box">
+        <textarea id="chat-input" rows="1" placeholder="Type a command or ask about Dawid…" autocomplete="off" spellcheck="false" data-testid="chat-input"></textarea>
+        <button id="send-btn" title="Send" data-testid="send-btn">↑</button>
       </div>
-      <div class="input-hint">Enter to send · Shift+Enter new line · Tab autocomplete</div>
+      <div class="input-hint" id="input-hint" data-testid="input-hint">Enter to send · Shift+Enter new line · Tab autocomplete</div>
     </div>
   </main>
 </div>
@@ -160,7 +220,162 @@ const inp    = document.getElementById('chat-input');
 const sendEl = document.getElementById('send-btn');
 
 let loaded = false;
+let currentLang = 'pl';
 let hist = [], hidx = -1;
+
+/* ── translations ────────────────────────────── */
+const T = {
+  pl: {
+    newChat:'Nowy czat',
+    cvSections:'Sekcje CV',
+    navAbout:'O mnie', navExperience:'Doświadczenie', navSkills:'Umiejętności',
+    navEducation:'Wykształcenie', navLanguages:'Języki', navContact:'Kontakt',
+    sidebarHint:'Wpisz <code style="color:var(--yw)">/help</code> po komendy<br><code style="color:var(--yw)">/generate-data</code><br>aby załadować dane',
+    placeholder:'Wpisz komendę żeby dowiedzieć się czegoś na temat Dawida…',
+    inputHint:'Enter aby wysłać \xb7 Shift+Enter nowa linia \xb7 Tab autouzupełnienie',
+
+    aboutTitle:'O mnie',
+    aboutRole:'Tester oprogramowania \xb7 <span style="color:var(--yw)">3+ lata stażu</span>',
+    aboutDesc:'Specjalizuję się w testach <span style="color:var(--gn)">manualnych i automatycznych</span>, kładąc duży nacisk na jakość produktu oraz User Experience.',
+    aboutEcommerce:'Projekty <span style="color:var(--bl)">e-commerce</span>:',
+    aboutItems:['Połączenia telefoniczne [IN/OUT]','Czaty [TEXT/AUDIO/VIDEO]','E-mail [IN/OUT] [OTRS/ZNUNY] [AZURE]','API [POSTMAN/SWAGGER]','DB [SQL]'],
+    aboutPast:'Przeszłość zawodowa w roli agenta obsługi pozwala mi płynnie wejść w rolę użytkownika końcowego przy weryfikacji system\xf3w.',
+
+    contactTitle:'Kontakt',
+    contactLocation:'Ostr\xf3w Wielkopolski, Polska',
+
+    expTitle:'Doświadczenie',
+    jobs:[
+      {t:'Regular Software Tester',        c:'Alfavox Software Sp. z o.o.',  d:'01/2023 — obecnie',    desc:'Prowadzenie projekt\xf3w od strony organizacji test\xf3w i wdrożeń.'},
+      {t:'Junior Software Tester',         c:'Alfavox Software Sp. z o.o.',  d:'mm/rrrr — mm/rrrr',   desc:'Tworzenie dokumentacji testowej, testy API, tworzenie test\xf3w automatycznych.'},
+      {t:'Beginner Software Tester',       c:'Alfavox Software Sp. z o.o.',  d:'mm/rrrr — mm/rrrr',   desc:'Testowanie manualne aplikacji desktopowych i webowych oraz scenariuszy testowych.'},
+      {t:'Młodszy Specjalista E-Commerce', c:'Santander Consumer Bank s.a.', d:'mm/rrrr — mm/rrrr',   desc:'Obsługa połączeń IN/OUT, realizowanie wniosk\xf3w kredytowych, sprzedaż ubezpieczeń.'},
+    ],
+
+    eduTitle:'Wykształcenie',
+    eduDegree:'Technik-Informatyk',
+
+    langTitle:'Języki',
+    langNative:'Ojczysty',
+    whoamiLocation:'Ostr\xf3w Wielkopolski, Polska',
+    whoamiRoleLabel:'Stanowisko',whoamiCompanyLabel:'Firma',whoamiLocationLabel:'Lokalizacja',
+    contactPhoneLabel:'Telefon',
+    skillsCats:['Testowanie','Narzędzia','API','Baza danych','OS / Infrastruktura','Narzędzia PM','AI','Kod'],
+
+    helpTitle:'Dostępne Komendy',
+    helpCmds:[
+      ['/generate-data', 'załaduj dane moduł\xf3w /experience, /education, /skills, /languages, /contact'],
+      ['/whoami',        'kim jestem'],
+      ['/clear',         'wyczyść czat'],
+      ['/newchat',       'zrestartuj sesję - rozpocznij nowy czat'],
+      ['/about',         'o mnie, czym się aktualnie zajmuję'],
+      ['/experience',    'doświadczenie zawodowe'],
+      ['/education',     'wykształcenie'],
+      ['/skills',        'umiejętności techniczne'],
+      ['/languages',     'języki'],
+      ['/contact',       'dane kontaktowe'],
+      ['/lang [pl|en]',  'zmień język interfejsu'],
+    ],
+    helpFooter:'↑↓ historia \xb7 Tab autocomplete \xb7 kliknij sekcję w panelu bocznym',
+
+    alreadyLoaded:'<p style="color:var(--mu)">Wszystkie moduły są już załadowane.</p>',
+    allLoaded:'Wszystkie dane załadowane.',
+    noDataMsg:'Moduł nie został załadowany. Uruchom:',
+    cmdNotFound:(cmd)=>`<p style="color:var(--rd)">command not found: <strong>${cmd}</strong></p><p style="color:var(--mu);font-size:13px;margin-top:4px">Wpisz <code style="color:var(--yw)">/help</code> aby zobaczyć listę komend.</p>`,
+    langSwitchedTo:'<p style="color:var(--gn)">Język zmieniony na <strong>Polski</strong>.</p>',
+    langCurrent:(lang)=>`<p style="color:var(--mu)">Aktualny język: <strong>${lang==='pl'?'Polski':'English'}</strong>. Użyj <code style="color:var(--yw)">/lang pl</code> lub <code style="color:var(--yw)">/lang en</code>.</p>`,
+    langInvalid:'<p style="color:var(--rd)">Nieprawidłowy język. Użyj: <code style="color:var(--yw)">/lang pl</code> lub <code style="color:var(--yw)">/lang en</code>.</p>',
+  },
+  en: {
+    newChat:'New Chat',
+    cvSections:'CV Sections',
+    navAbout:'About Me', navExperience:'Experience', navSkills:'Skills',
+    navEducation:'Education', navLanguages:'Languages', navContact:'Contact',
+    sidebarHint:'Type <code style="color:var(--yw)">/help</code> for commands<br><code style="color:var(--yw)">/generate-data</code><br>to load data',
+    placeholder:'Type a command to get some info about Dawid…',
+    inputHint:'Enter to send \xb7 Shift+Enter new line \xb7 Tab autocomplete',
+
+    aboutTitle:'About Me',
+    aboutRole:'Software Tester \xb7 <span style="color:var(--yw)">3+ years of experience</span>',
+    aboutDesc:'I specialize in <span style="color:var(--gn)">manual and automated testing</span>, placing great emphasis on product quality and User Experience.',
+    aboutEcommerce:'<span style="color:var(--bl)">E-commerce</span> projects:',
+    aboutItems:['Calls [IN/OUT]','Chat [TEXT/AUDIO/VIDEO]','E-mail [IN/OUT] [OTRS/ZNUNY] [AZURE]','API [POSTMAN/SWAGGER]','DB [SQL]'],
+    aboutPast:"My professional background as a customer service agent allows me to smoothly step into the end-user's perspective when verifying systems.",
+
+    contactTitle:'Contact',
+    contactLocation:'Ostr\xf3w Wielkopolski, Poland',
+
+    expTitle:'Experience',
+    jobs:[
+      {t:'Regular Software Tester',        c:'Alfavox Software Sp. z o.o.',  d:'01/2023 — present',   desc:'Managing projects in terms of test organization and deployments.'},
+      {t:'Junior Software Tester',         c:'Alfavox Software Sp. z o.o.',  d:'mm/yyyy — mm/yyyy',   desc:'Creating test documentation, API testing, developing automated tests.'},
+      {t:'Beginner Software Tester',       c:'Alfavox Software Sp. z o.o.',  d:'mm/yyyy — mm/yyyy',   desc:'Manual testing of desktop and web applications and test scenarios.'},
+      {t:'Junior E-Commerce Specialist',   c:'Santander Consumer Bank s.a.', d:'mm/yyyy — mm/yyyy',   desc:'Handling IN/OUT calls, processing loan applications, selling insurance products.'},
+    ],
+
+    eduTitle:'Education',
+    eduDegree:'IT Technician',
+
+    langTitle:'Languages',
+    langNative:'Native',
+    whoamiLocation:'Ostr\xf3w Wielkopolski, Poland',
+    whoamiRoleLabel:'Role',whoamiCompanyLabel:'Company',whoamiLocationLabel:'Location',
+    contactPhoneLabel:'Phone',
+    skillsCats:['Testing','Tools','API','Database','OS / Infra','PM Tools','AI','Code'],
+
+    helpTitle:'Available Commands',
+    helpCmds:[
+      ['/generate-data', 'load module data for /experience, /education, /skills, /languages, /contact'],
+      ['/whoami',        'who am I'],
+      ['/clear',         'clear chat'],
+      ['/newchat',       'restart session - start a new chat'],
+      ['/about',         'about me, what I currently do'],
+      ['/experience',    'work experience'],
+      ['/education',     'education'],
+      ['/skills',        'technical skills'],
+      ['/languages',     'languages'],
+      ['/contact',       'contact information'],
+      ['/lang [pl|en]',  'change interface language'],
+    ],
+    helpFooter:'↑↓ history \xb7 Tab autocomplete \xb7 click section in sidebar',
+
+    alreadyLoaded:'<p style="color:var(--mu)">All modules are already loaded.</p>',
+    allLoaded:'All data loaded.',
+    noDataMsg:'Module not loaded. Run:',
+    cmdNotFound:(cmd)=>`<p style="color:var(--rd)">command not found: <strong>${cmd}</strong></p><p style="color:var(--mu);font-size:13px;margin-top:4px">Type <code style="color:var(--yw)">/help</code> to see available commands.</p>`,
+    langSwitchedTo:'<p style="color:var(--gn)">Language switched to <strong>English</strong>.</p>',
+    langCurrent:(lang)=>`<p style="color:var(--mu)">Current language: <strong>${lang==='pl'?'Polski':'English'}</strong>. Use <code style="color:var(--yw)">/lang pl</code> or <code style="color:var(--yw)">/lang en</code>.</p>`,
+    langInvalid:'<p style="color:var(--rd)">Invalid language. Use: <code style="color:var(--yw)">/lang pl</code> or <code style="color:var(--yw)">/lang en</code>.</p>',
+  }
+};
+
+function l(key){ return T[currentLang][key]; }
+
+/* ── language switch ─────────────────────────── */
+function applyLangUI(next){
+  currentLang = next;
+  document.getElementById('html-root').lang = currentLang;
+  const langBtn = document.getElementById('lang-btn');
+  langBtn.textContent = currentLang === 'pl' ? 'PL' : 'EN';
+  langBtn.className = currentLang === 'pl' ? 'lang-pl' : 'lang-en';
+  document.getElementById('sb-hint').innerHTML = l('sidebarHint');
+  document.getElementById('sb-cv-label').textContent = l('cvSections');
+  document.getElementById('sb-newchat-label').textContent = l('newChat');
+  document.getElementById('input-hint').textContent = l('inputHint');
+  inp.placeholder = l('placeholder');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if(T[currentLang][key]) el.textContent = T[currentLang][key];
+  });
+}
+
+function switchLang(target){
+  const next = target || (currentLang === 'pl' ? 'en' : 'pl');
+  if(next !== 'pl' && next !== 'en') return;
+  applyLangUI(next);
+  msgsEl.innerHTML=''; hist=[]; hidx=-1;
+  bootSequence();
+}
 
 /* ── helpers ─────────────────────────────────── */
 function sc(){ msgsEl.scrollTop = msgsEl.scrollHeight; }
@@ -180,7 +395,7 @@ function asstMsg(html){
   const d=document.createElement('div');
   d.className='msg-asst';
   d.innerHTML=`<div class="msg-asst-inner">
-    <div class="avatar">DB</div>
+    <div class="avatar"><img src="https://github.com/dbothur.png" alt="DB"></div>
     <div class="msg-body">
       <div class="msg-sender">Dawid Bothur</div>
       <div class="msg-content">${html}</div>
@@ -192,138 +407,104 @@ function asstMsg(html){
 /* ── no-data guard ───────────────────────────── */
 function noData(name){
   return `<p style="color:var(--rd);margin-bottom:6px">[ NO DATA ] — module: <strong>${e(name.toUpperCase())}</strong></p>
-          <p style="color:var(--mu);font-size:13px">Moduł nie został załadowany. Uruchom:</p>
+          <p style="color:var(--mu);font-size:13px">${e(l('noDataMsg'))}</p>
           <p style="margin-top:6px"><code style="color:var(--yw);font-family:'JetBrains Mono',monospace">/generate-data</code></p>`;
 }
 
 /* ── section builders ───────────────────────── */
 function buildAbout(){
   if(!loaded) return noData('about');
-  return `<div class="sec-title">About Me</div>
-    <div class="irow"><span class="ilabel">Role</span><span class="ival">Tester oprogramowania · <span style="color:var(--yw)">3+ lata stażu</span></span></div>
-    <p style="margin:12px 0 8px">Specjalizuję się w testach <span style="color:var(--gn)">manualnych i automatycznych</span>, kładąc duży nacisk na jakość produktu oraz User Experience.</p>
-    <p style="color:var(--mu);font-size:13px;margin-bottom:6px">Projekty <span style="color:var(--bl)">e-commerce</span>:</p>
+  return `<div class="sec-title">${e(l('aboutTitle'))}</div>
+    <div class="irow"><span class="ilabel">${e(l('whoamiRoleLabel'))}</span><span class="ival">${l('aboutRole')}</span></div>
+    <p style="margin:12px 0 8px">${l('aboutDesc')}</p>
+    <p style="color:var(--mu);font-size:13px;margin-bottom:6px">${l('aboutEcommerce')}</p>
     <ul style="color:var(--mu);font-size:13px;padding-left:18px;line-height:2;margin-bottom:12px">
-      <li>Połączenia telefoniczne [IN/OUT]</li>
-      <li>Czaty [TEXT/AUDIO/VIDEO]</li>
-      <li>E-mail [IN/OUT] [OTRS/ZNUNY] [AZURE]</li>
-      <li>API [POSTMAN/SWAGGER]</li>
-      <li>DB [SQL]</li>
+      ${l('aboutItems').map(i=>`<li>${e(i)}</li>`).join('')}
     </ul>
-    <p style="color:var(--mu);font-size:13px">Przeszłość zawodowa w roli agenta obsługi pozwala mi płynnie wejść w rolę użytkownika końcowego przy weryfikacji systemów.</p>`;
+    <p style="color:var(--mu);font-size:13px">${e(l('aboutPast'))}</p>`;
 }
 
 function buildContact(){
   if(!loaded) return noData('contact');
-  return `<div class="sec-title">Contact</div>
-    <div class="irow"><span class="ilabel">✉ Email</span><a href="mailto:dawidbothur@icloud.com">dawidbothur@icloud.com</a></div>
-    <div class="irow"><span class="ilabel">📱 Phone</span><span class="ival">+__PHONE__</span></div>
-    <div class="irow"><span class="ilabel">📍 Location</span><span class="ival">Ostrów Wielkopolski, Polska</span></div>
-    <div class="irow"><span class="ilabel">in LinkedIn</span><a href="https://linkedin.com/in/d-bothur" target="_blank">linkedin.com/in/d-bothur</a></div>
-    <div class="irow"><span class="ilabel">◆ GitHub</span><a href="https://github.com/dbothur" target="_blank">github.com/dbothur</a></div>`;
+  return `<div class="sec-title">${e(l('contactTitle'))}</div>
+    <div class="irow"><span class="ilabel"><i class="nf nf-fa-envelope"></i> Email</span><a href="mailto:dawidbothur@icloud.com">dawidbothur@icloud.com</a></div>
+    <div class="irow"><span class="ilabel"><i class="nf nf-fa-phone"></i> ${e(l('contactPhoneLabel'))}</span><span class="ival">+__PHONE__</span></div>
+    <div class="irow"><span class="ilabel"><i class="nf nf-fa-map_marker"></i> ${e(l('whoamiLocationLabel'))}</span><span class="ival">${e(l('contactLocation'))}</span></div>
+    <div class="irow"><span class="ilabel"><i class="nf nf-fa-linkedin"></i> LinkedIn</span><a href="https://linkedin.com/in/d-bothur" target="_blank">linkedin.com/in/d-bothur</a></div>
+    <div class="irow"><span class="ilabel"><i class="nf nf-fa-github"></i> GitHub</span><a href="https://github.com/dbothur" target="_blank">github.com/dbothur</a></div>`;
 }
 
 function buildSkills(){
   if(!loaded) return noData('skills');
+  const n=l('skillsCats');
   const cats=[
-    {ico:'🧪',k:'Testing',   cls:'tg',t:['Manual Testing','Regression','Exploratory','Smoke','E2E','Test Cases','Test Plans','Documentation']},
-    {ico:'🔧',k:'Tools',     cls:'tb',t:['Playwright','DEV Tools','mRemote','MobaXterm','WinSCP','Freelens','BrowserStack','WinDirStat']},
-    {ico:'🌐',k:'API',       cls:'tc',t:['REST API','Postman','Swagger','SOAP UI']},
-    {ico:'🗄', k:'Database', cls:'ty',t:['SQL','PostgreSQL','DBeaver']},
-    {ico:'💻',k:'OS / Infra',cls:'tr',t:['Windows','Services','IIS','Linux','Docker','Kubernetes','Android','iOS']},
-    {ico:'⚙', k:'PM Tools', cls:'tb',t:['Jira','Confluence','TestFLO','GitHub','GitLab']},
-    {ico:'🤖',k:'AI',        cls:'tp',t:['Claude','ChatGPT','Gemini','Github Copilot']},
-    {ico:'</>',k:'Code',     cls:'tg',t:['JavaScript','TypeScript','HTML/CSS','Nginx','Git','Bash','Shell','TOML','CLI','YAML','JSON']},
+    {ico:'nf-cod-beaker',    k:n[0],cls:'tg',t:['Manual Testing','Regression','Exploratory','Smoke','E2E','Test Cases','Test Plans','Documentation']},
+    {ico:'nf-fa-wrench',     k:n[1],cls:'tb',t:['Playwright','DEV Tools','mRemote','MobaXterm','WinSCP','Freelens','BrowserStack','WinDirStat']},
+    {ico:'nf-fa-plug',       k:n[2],cls:'tc',t:['REST API','Postman','Swagger','SOAP UI']},
+    {ico:'nf-cod-database',  k:n[3],cls:'ty',t:['SQL','PostgreSQL','DBeaver']},
+    {ico:'nf-cod-server',    k:n[4],cls:'tr',t:['Windows','Services','IIS','Linux','Docker','Kubernetes','Android','iOS']},
+    {ico:'nf-fa-list_check', k:n[5],cls:'tb',t:['Jira','Confluence','TestFLO','GitHub','GitLab']},
+    {ico:'nf-fa-robot',      k:n[6],cls:'tp',t:['Claude','ChatGPT','Gemini','Github Copilot']},
+    {ico:'nf-fa-code',       k:n[7],cls:'tg',t:['JavaScript','TypeScript','HTML/CSS','Nginx','Git','Bash','Shell','TOML','CLI','YAML','JSON']},
   ];
-  return `<div class="sec-title">Skills</div>`+
-    cats.map(c=>`<div class="sg"><div class="sg-label">${c.ico} ${e(c.k)}</div><div class="tags">${tags(c.t,c.cls)}</div></div>`).join('');
+  return `<div class="sec-title">${e(l('navSkills'))}</div>`+
+    cats.map(c=>`<div class="sg"><div class="sg-label"><i class="nf ${c.ico}"></i> ${e(c.k)}</div><div class="tags">${tags(c.t,c.cls)}</div></div>`).join('');
 }
 
 function buildExperience(){
   if(!loaded) return noData('experience');
-  const jobs=[
-    {t:'Regular Software Tester',       c:'Alfavox Software Sp. z o.o.', d:'01/2023 — obecnie',
-     desc:'Prowadzenie projektów od strony organizacji testów i wdrożeń.'},
-    {t:'Junior Software Tester',        c:'Alfavox Software Sp. z o.o.', d:'mm/rrrr — mm/rrrr',
-     desc:'Tworzenie dokumentacji testowej, testy API, tworzenie testów automatycznych.'},
-    {t:'Beginner Software Tester',      c:'Alfavox Software Sp. z o.o.', d:'mm/rrrr — mm/rrrr',
-     desc:'Testowanie manualne aplikacji desktopowych i webowych oraz scenariuszy testowych.'},
-    {t:'Młodszy Specjalista E-Commerce',c:'Santander Consumer Bank s.a.', d:'mm/rrrr — mm/rrrr',
-     desc:'Obsługa połączeń IN/OUT, realizowanie wniosków kredytowych, sprzedaż ubezpieczeń.'},
-  ];
-  return `<div class="sec-title">Experience</div>`+
-    jobs.map(j=>`<div class="card">
+  return `<div class="sec-title">${e(l('expTitle'))}</div>`+
+    l('jobs').map(j=>`<div class="card">
       <div class="card-title">${e(j.t)}</div>
       <div class="card-co">${e(j.c)}</div>
-      <div class="card-date">📅 ${e(j.d)}</div>
+      <div class="card-date"><i class="nf nf-fa-calendar"></i> ${e(j.d)}</div>
       <div class="card-desc">${e(j.desc)}</div>
     </div>`).join('');
 }
 
 function buildEducation(){
   if(!loaded) return noData('education');
-  return `<div class="sec-title">Education</div>
+  return `<div class="sec-title">${e(l('eduTitle'))}</div>
     <div class="card">
-      <div class="card-title">🎓 Technik-Informatyk</div>
+      <div class="card-title"><i class="nf nf-fa-graduation_cap"></i> ${e(l('eduDegree'))}</div>
       <div class="card-co">ZST Ostrów Wielkopolski</div>
-      <div class="card-date">📅 2017 — 2021</div>
+      <div class="card-date"><i class="nf nf-fa-calendar"></i> 2017 — 2021</div>
     </div>`;
 }
 
 function buildLanguages(){
   if(!loaded) return noData('languages');
-  return `<div class="sec-title">Languages</div>
-    <div class="irow"><span class="ilabel">🇵🇱 Polski</span><span style="color:var(--gn)">Native</span></div>
+  return `<div class="sec-title">${e(l('langTitle'))}</div>
+    <div class="irow"><span class="ilabel">🇵🇱 Polski</span><span style="color:var(--gn)">${e(l('langNative'))}</span></div>
     <div class="irow"><span class="ilabel">🇬🇧 English</span><span style="color:var(--bl)">B2</span></div>`;
 }
 
 function buildHelp(){
-  const cmds=[
-    ['/generate-data','załaduj dane CV'],
-    ['/whoami',     'kim jestem — skrót'],
-    ['/ls',         'lista sekcji'],
-    ['/clear',      'wyczyść czat'],
-    ['/newchat',    'zrestartuj sesję'],
-    ['/about',      'o mnie'],
-    ['/experience', 'doświadczenie zawodowe'],
-    ['/education',  'wykształcenie'],
-    ['/skills',     'umiejętności techniczne'],
-    ['/languages',  'języki'],
-    ['/contact',    'dane kontaktowe'],
-  ];
-  return `<div class="sec-title">Available Commands</div>
-    <div class="help-grid">${cmds.map(([c,d])=>`<div class="hcmd">${e(c)}</div><div class="hdesc">${e(d)}</div>`).join('')}</div>
-    <p style="color:var(--mu);font-size:12px;margin-top:12px">↑↓ historia · Tab autocomplete · kliknij sekcję w panelu bocznym</p>`;
+  return `<div class="sec-title">${e(l('helpTitle'))}</div>
+    <div class="help-grid">${l('helpCmds').map(([c,d])=>`<div class="hcmd">${e(c)}</div><div class="hdesc">${e(d)}</div>`).join('')}</div>
+    <p style="color:var(--mu);font-size:12px;margin-top:12px">${e(l('helpFooter'))}</p>`;
 }
 
 function buildWhoami(){
   return `<div style="margin-bottom:8px"><span style="color:var(--ac);font-weight:700;font-size:16px">Dawid Bothur</span></div>
-    <div class="irow"><span class="ilabel">Role</span><span class="ival">Regular Software Tester</span></div>
-    <div class="irow"><span class="ilabel">Company</span><span style="color:var(--gn)">Alfavox Software Sp. z o.o.</span></div>
-    <div class="irow"><span class="ilabel">Location</span><span class="ival">Ostrów Wielkopolski, Polska</span></div>
+    <div class="irow"><span class="ilabel">${e(l('whoamiRoleLabel'))}</span><span class="ival">Regular Software Tester</span></div>
+    <div class="irow"><span class="ilabel">${e(l('whoamiCompanyLabel'))}</span><span style="color:var(--gn)">Alfavox Software Sp. z o.o.</span></div>
+    <div class="irow"><span class="ilabel">${e(l('whoamiLocationLabel'))}</span><span class="ival">${e(l('whoamiLocation'))}</span></div>
     <div class="irow"><span class="ilabel">GitHub</span><a href="https://github.com/dbothur" target="_blank">github.com/dbothur</a></div>`;
 }
 
-function buildLs(){
-  const items=['about','contact','skills','experience','education','languages'];
-  return `<div style="font-family:'JetBrains Mono',monospace;font-size:13px;display:flex;flex-wrap:wrap;gap:10px">
-    ${items.map(i=>`<span style="color:var(--bl);font-weight:500">/${i}</span>`).join('')}
-    <span style="color:var(--mu)">cv.spec.ts</span>
-    <span style="color:var(--mu)">README.md</span>
-  </div>`;
-}
 
 /* ── npx (animated, inline update) ─────────── */
 async function cmdNpx(){
   if(loaded){
-    asstMsg('<p style="color:var(--mu)">cv.spec.ts: wszystkie moduły już załadowane.</p>');
+    asstMsg(l('alreadyLoaded'));
     return;
   }
   const mods=['about','contact','skills','experience','education','languages'];
   const wrap=document.createElement('div');
   wrap.className='msg-asst';
   wrap.innerHTML=`<div class="msg-asst-inner">
-    <div class="avatar">DB</div>
+    <div class="avatar"><img src="https://github.com/dbothur.png" alt="DB"></div>
     <div class="msg-body">
       <div class="msg-sender">Dawid Bothur</div>
       <div class="msg-content" id="_npx" style="font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2"></div>
@@ -331,20 +512,20 @@ async function cmdNpx(){
   </div>`;
   msgsEl.appendChild(wrap);
   const cel=document.getElementById('_npx');
-  const lines=[`<span style="color:var(--mu)">Running cv.spec.ts...</span>`];
+  const lines=[`<span style="color:var(--mu)">Loading modules...</span>`];
   cel.innerHTML=lines.join('<br>'); sc();
   await new Promise(res=>{
     let i=0;
     const iv=setInterval(()=>{
       if(i<mods.length){
         const ms=Math.floor(Math.random()*120+80);
-        lines.push(`<span style="color:var(--gn)">✓</span> <span style="color:var(--mu)">PASS  [</span><span style="color:var(--gn)">${mods[i]}.spec.ts</span><span style="color:var(--mu)">]  ${ms}ms</span>`);
+        lines.push(`<span style="color:var(--gn)">✓</span> <span style="color:var(--mu)">[INFO][</span><span style="color:var(--gn)">${mods[i]}.module</span><span style="color:var(--mu)">] → loaded successfully  ${ms}ms</span>`);
         cel.innerHTML=lines.join('<br>'); sc(); i++;
       } else {
         clearInterval(iv); loaded=true;
         lines.push('');
-        lines.push(`<span style="color:var(--gn);font-weight:700">✓ 6 passed</span> <span style="color:var(--mu)">(6 modules · cv.spec.ts)</span>`);
-        lines.push(`<span style="color:var(--gn)">▶</span> <span style="color:var(--mu)">Wszystkie dane załadowane.</span>`);
+        lines.push(`<span style="color:var(--gn);font-weight:700">✓ 6 loaded</span> <span style="color:var(--mu)">(6 modules)</span>`);
+        lines.push(`<span style="color:var(--gn)">▶</span> <span style="color:var(--mu)">${e(l('allLoaded'))}</span>`);
         cel.innerHTML=lines.join('<br>'); sc(); res();
       }
     },220);
@@ -359,28 +540,46 @@ function setActiveNav(cmd){
 }
 
 /* ── command dispatch ────────────────────────── */
-const TAB_CMDS=['/about','/contact','/skills','/experience','/education','/languages','/whoami','/ls','/help','/clear','/newchat','/generate-data'];
+const TAB_CMDS=['/about','/contact','/skills','/experience','/education','/languages','/whoami','/help','/clear','/newchat','/generate-data','/lang'];
 const NAV_CMDS=new Set(['about','contact','skills','experience','education','languages']);
-const BUILDERS={about:buildAbout,contact:buildContact,skills:buildSkills,experience:buildExperience,education:buildEducation,languages:buildLanguages,whoami:buildWhoami,ls:buildLs,help:buildHelp};
+const BUILDERS={about:buildAbout,contact:buildContact,skills:buildSkills,experience:buildExperience,education:buildEducation,languages:buildLanguages,whoami:buildWhoami,help:buildHelp};
 
 async function processCmd(raw){
   if(!raw.trim()) return;
   const norm=raw.trim().toLowerCase();
-  const full=norm.split(/\s+/)[0];
-  const cmd=full.startsWith('/')? full.slice(1) : full;
+  const parts=norm.split(/\s+/);
+  const full=parts[0];
+  if(!full.startsWith('/')){
+    userMsg(raw);
+    asstMsg(l('cmdNotFound')(e(full)));
+    sc(); return;
+  }
+  const cmd=full.slice(1);
   userMsg(raw);
   if(norm==='/generate-data'){
     await cmdNpx();
   } else if(cmd==='clear'){
     msgsEl.innerHTML='';
   } else if(cmd==='newchat'){
-    asstMsg('<p style="color:var(--mu)">Restarting session...</p>');
+    asstMsg('<p style="color:var(--mu)">Starting new chat...</p>');
     setTimeout(()=>{ msgsEl.innerHTML=''; loaded=false; hist=[]; hidx=-1; inp.value=''; bootSequence(); },400);
+  } else if(cmd==='lang'){
+    const arg=parts[1];
+    if(!arg){
+      asstMsg(l('langCurrent')(currentLang));
+    } else if(arg==='pl'||arg==='en'){
+      applyLangUI(arg);
+      msgsEl.innerHTML=''; hist=[]; hidx=-1;
+      bootSequence();
+      return;
+    } else {
+      asstMsg(l('langInvalid'));
+    }
   } else if(BUILDERS[cmd]){
     if(NAV_CMDS.has(cmd)) setActiveNav(cmd);
     asstMsg(BUILDERS[cmd]());
   } else {
-    asstMsg(`<p style="color:var(--rd)">command not found: <strong>${e(full)}</strong></p><p style="color:var(--mu);font-size:13px;margin-top:4px">Wpisz <code style="color:var(--yw)">/help</code> aby zobaczyć listę komend.</p>`);
+    asstMsg(l('cmdNotFound')(e(full)));
   }
   sc();
 }
@@ -421,12 +620,12 @@ async function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 async function bootSequence(){
   await sleep(180);
   const ascii=[
-    '  ██████╗  █████╗ ██╗    ██╗██╗██████╗    ██████╗  ██████╗ ████████╗██╗  ██╗██╗   ██╗██████╗  ',
-    '  ██╔══██╗██╔══██╗██║    ██║██║██╔══██╗   ██╔══██╗██╔═══██╗╚══██╔══╝██║  ██║██║   ██║██╔══██╗ ',
-    '  ██║  ██║███████║██║ █╗ ██║██║██║  ██║   ██████╔╝██║   ██║   ██║   ███████║██║   ██║██████╔╝ ',
-    '  ██║  ██║██╔══██║██║███╗██║██║██║  ██║   ██╔══██╗██║   ██║   ██║   ██╔══██║██║   ██║██╔══██╗ ',
-    '  ██████╔╝██║  ██║╚███╔███╔╝██║██████╔╝   ██████╔╝╚██████╔╝   ██║   ██║  ██║╚██████╔╝██║  ██║ ',
-    '  ╚═════╝ ╚═╝  ╚═╝ ╚══╝╚══╝ ╚═╝╚═════╝    ╚═════╝  ╚═════╝    ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝',
+    '██╗  ██╗███████╗██╗     ██╗      ██████╗     ██╗    ██╗ ██████╗ ██████╗ ██╗     ██████╗ ██╗',
+    '██║  ██║██╔════╝██║     ██║     ██╔═══██╗    ██║    ██║██╔═══██╗██╔══██╗██║     ██╔══██╗██║',
+    '███████║█████╗  ██║     ██║     ██║   ██║    ██║ █╗ ██║██║   ██║██████╔╝██║     ██║  ██║██║',
+    '██╔══██║██╔══╝  ██║     ██║     ██║   ██║    ██║███╗██║██║   ██║██╔══██╗██║     ██║  ██║╚═╝',
+    '██║  ██║███████╗███████╗███████╗╚██████╔╝    ╚███╔███╔╝╚██████╔╝██║  ██║███████╗██████╔╝██╗',
+    '╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝ ╚═════╝      ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═════╝ ╚═╝',
   ].join('\n');
   asstMsg(
     `<div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;line-height:1.2;color:var(--tx);white-space:pre;overflow-x:auto;margin-bottom:16px">${ascii}</div>`+
@@ -435,6 +634,46 @@ async function bootSequence(){
   inp.focus();
 }
 
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar');
+  const open=document.getElementById('sb-open');
+  sb.classList.remove('genie-out','genie-in');
+  void sb.offsetWidth;
+  if(sb.classList.contains('collapsed')){
+    sb.classList.remove('collapsed');
+    void sb.offsetWidth;
+    sb.classList.add('genie-in');
+    open.style.display='none';
+    sb.addEventListener('animationend',()=>sb.classList.remove('genie-in'),{once:true});
+  } else {
+    sb.classList.add('genie-out');
+    open.style.display='flex';
+    sb.addEventListener('animationend',()=>{
+      sb.classList.remove('genie-out');
+      sb.classList.add('collapsed');
+    },{once:true});
+  }
+}
+document.getElementById('sb-toggle').addEventListener('click',toggleSidebar);
+document.getElementById('sb-open').addEventListener('click',toggleSidebar);
+
+/* ── theme ────────────────────────────────────── */
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme',theme);
+  const toggle=document.getElementById('theme-toggle');
+  if(toggle) toggle.checked=(theme==='dark');
+  localStorage.setItem('theme',theme);
+}
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme')||'dark';
+  applyTheme(cur==='dark'?'light':'dark');
+}
+(function(){
+  const saved=localStorage.getItem('theme');
+  applyTheme(saved||(window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'));
+})();
+
+applyLangUI('pl');
 bootSequence();
 </script>
 </body>
