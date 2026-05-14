@@ -112,8 +112,8 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Inter',s
 
 /* ── content helpers ─────────────────────────── */
 .sec-title{font-size:16px;font-weight:700;color:var(--tx);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--bd)}
-.irow{display:flex;align-items:baseline;gap:10px;padding:4px 0}
-.ilabel{color:var(--mu);font-size:13px;min-width:90px;flex-shrink:0}
+.irow{display:flex;align-items:center;gap:10px;padding:4px 0}
+.ilabel{display:inline-flex;align-items:center;gap:5px;color:var(--mu);font-size:13px;min-width:90px;flex-shrink:0}
 .ival{color:var(--tx)}
 .card{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:13px 15px;margin-bottom:8px}
 .card-title{font-weight:600;font-size:14px;color:var(--bl);margin-bottom:2px}
@@ -485,7 +485,6 @@ function buildContact(){
   return `<div class="sec-title">${e(l('contactTitle'))}</div>
     <div class="irow"><span class="ilabel"><i class="nf nf-fa-envelope"></i> Email</span><span class="ival">__EMAIL__</span></div>
     <div class="irow"><span class="ilabel"><i class="nf nf-fa-phone"></i> ${e(l('contactPhoneLabel'))}</span><span class="ival">+__PHONE__</span></div>
-    <div class="irow"><span class="ilabel"><i class="nf nf-fa-map_marker"></i> ${e(l('whoamiLocationLabel'))}</span><span class="ival">__LOCATION__</span></div>
     <div class="irow"><span class="ilabel"><i class="nf nf-fa-linkedin"></i> LinkedIn</span><a href="https://linkedin.com/in/d-bothur" target="_blank">linkedin.com/in/d-bothur</a></div>
     <div class="irow"><span class="ilabel"><i class="nf nf-fa-github"></i> GitHub</span><a href="https://github.com/dbothur" target="_blank">github.com/dbothur</a></div>`;
 }
@@ -554,7 +553,7 @@ function buildWhoami(){
   return `<div style="margin-bottom:8px"><span style="color:var(--ac);font-weight:700;font-size:16px">Dawid Bothur</span></div>
     <div class="irow"><span class="ilabel">${e(l('whoamiRoleLabel'))}</span><span class="ival">Regular Software Tester</span></div>
     <div class="irow"><span class="ilabel">${e(l('whoamiCompanyLabel'))}</span><span style="color:var(--gn)">Alfavox Software Sp. z o.o.</span></div>
-    <div class="irow"><span class="ilabel">${e(l('whoamiLocationLabel'))}</span><span class="ival">${e(l('whoamiLocation'))}</span></div>
+    <div class="irow"><span class="ilabel">${e(l('whoamiLocationLabel'))}</span><span class="ival">__LOCATION__</span></div>
     <div class="irow"><span class="ilabel">GitHub</span><a href="https://github.com/dbothur" target="_blank">github.com/dbothur</a></div>`;
 }
 
@@ -726,10 +725,16 @@ async function bootSequence(){
     '██║  ██║███████╗███████╗███████╗╚██████╔╝    ╚███╔███╔╝╚██████╔╝██║  ██║███████╗██████╔╝██╗',
     '╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝ ╚═════╝      ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═════╝ ╚═╝',
   ].join('\n');
-  asstMsg(
-    `<div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;line-height:1.2;color:var(--tx);white-space:pre;overflow-x:auto;margin-bottom:16px">${ascii}</div>`+
+  const msg = asstMsg(
+    `<div data-ascii style="font-family:'JetBrains Mono',monospace;font-size:8.5px;line-height:1.2;color:var(--tx);white-space:pre;overflow:hidden;margin-bottom:16px">${ascii}</div>`+
     buildHelp()
   );
+  const asciiEl = msg.querySelector('[data-ascii]');
+  if(asciiEl){
+    const avail = asciiEl.parentElement.clientWidth;
+    if(asciiEl.scrollWidth > avail)
+      asciiEl.style.fontSize = (8.5 * avail / asciiEl.scrollWidth).toFixed(2)+'px';
+  }
 }
 
 function toggleSidebar(){
