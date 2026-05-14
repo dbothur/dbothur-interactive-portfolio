@@ -168,6 +168,29 @@ html,body,#sidebar,#chat-main,#chat-header,#input-area,#input-box,.card,.nav-ite
 .sw-moon{display:none;color:#1c1c3a}.sw-sun{display:block;color:#e08000}
 #theme-toggle:checked~.sw-track .sw-moon{display:block}
 #theme-toggle:checked~.sw-track .sw-sun{display:none}
+
+/* ── mobile ──────────────────────────────────── */
+#sb-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;cursor:pointer}
+#sb-backdrop.active{display:block}
+@media(max-width:640px){
+  #sidebar{position:fixed;top:0;left:0;height:100%;z-index:100;width:256px!important;padding:12px 8px!important;border-right:1px solid var(--bd)!important;transform:translateX(-100%);transition:transform .25s ease}
+  #sidebar.mobile-open{transform:translateX(0)!important}
+  #sidebar.collapsed{transform:translateX(-100%);animation:none!important}
+  #sidebar.genie-out,#sidebar.genie-in{animation:none!important}
+  .hdr-badge{display:none}
+  .msg-user,.msg-asst{padding:5px 12px}
+  .msg-user{max-width:100%}
+  #input-area{padding:8px 12px 14px}
+  #chat-header{padding:10px 12px;gap:6px}
+  #chat-input{font-size:16px}
+  button,a,.nav-item{touch-action:manipulation}
+  .input-hint{display:none}
+  .help-footer-hint{display:none}
+  #chat-input::-webkit-scrollbar{display:none}
+  #chat-input{-ms-overflow-style:none;scrollbar-width:none}
+  .avatar{display:none}
+  .msg-asst-inner{gap:0}
+}
 </style>
 </head>
 <body>
@@ -235,6 +258,7 @@ html,body,#sidebar,#chat-main,#chat-header,#input-area,#input-box,.card,.nav-ite
     </div>
   </main>
 </div>
+<div id="sb-backdrop"></div>
 
 <script>
 const msgsEl = document.getElementById('messages');
@@ -273,10 +297,10 @@ const T = {
 
     expTitle:'Doświadczenie',
     jobs:[
-      {t:'Regular Software Tester',        c:'Alfavox Software Sp. z o.o.',  d:'01/2023 — obecnie',    desc:'Prowadzenie projekt\xf3w od strony organizacji test\xf3w i wdrożeń.'},
-      {t:'Junior Software Tester',         c:'Alfavox Software Sp. z o.o.',  d:'mm/rrrr — mm/rrrr',   desc:'Tworzenie dokumentacji testowej, testy API, tworzenie test\xf3w automatycznych.'},
-      {t:'Beginner Software Tester',       c:'Alfavox Software Sp. z o.o.',  d:'mm/rrrr — mm/rrrr',   desc:'Testowanie manualne aplikacji desktopowych i webowych oraz scenariuszy testowych.'},
-      {t:'Młodszy Specjalista E-Commerce', c:'Santander Consumer Bank s.a.', d:'mm/rrrr — mm/rrrr',   desc:'Obsługa połączeń IN/OUT, realizowanie wniosk\xf3w kredytowych, sprzedaż ubezpieczeń.'},
+      {t:'Regular Software Tester',        c:'Alfavox Software Sp. z o.o.',  d:'08/2025 — obecnie',    desc:'Prowadzenie projekt\xf3w od strony organizacji test\xf3w i wdrożeń.'},
+      {t:'Junior Software Tester',         c:'Alfavox Software Sp. z o.o.',  d:'01/2023 — 08/2025',   desc:'Tworzenie dokumentacji testowej, testy API, tworzenie test\xf3w automatycznych.'},
+      {t:'Beginner Software Tester',       c:'Alfavox Software Sp. z o.o.',  d:'10/2022 — 01/2023',   desc:'Testowanie manualne aplikacji desktopowych i webowych oraz scenariuszy testowych.'},
+      {t:'Młodszy Specjalista E-Commerce', c:'Santander Consumer Bank s.a.', d:'04/2022 — 09/2022',   desc:'Obsługa połączeń IN/OUT, realizowanie wniosk\xf3w kredytowych, sprzedaż ubezpieczeń.'},
     ],
 
     eduTitle:'Wykształcenie',
@@ -310,7 +334,7 @@ const T = {
       ['/languages',     'języki'],
       ['/contact',       'dane kontaktowe'],
     ],
-    helpFooter:'↑↓ historia \xb7 Tab autocomplete \xb7 kliknij sekcję w panelu bocznym',
+    helpFooter:'↑↓ historia \xb7 Tab autouzupełnienie \xb7 kliknij sekcję w panelu bocznym',
 
     newChatStarting:'Rozpoczynam nowy czat...',
     loadingModules:'Ładowanie modułów...',
@@ -418,7 +442,8 @@ document.getElementById('sb-cv-label').textContent = l('cvSections');
   const genLbl = document.getElementById('sb-gen-label');
   if(genLbl) genLbl.textContent = loaded ? l('genDataDone') : l('genDataBtn');
   document.getElementById('input-hint').textContent = l('inputHint');
-  inp.placeholder = l('placeholder');
+  inp.dataset.placeholder = l('placeholder');
+  syncPlaceholder();
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
     if(T[currentLang][key]) el.textContent = T[currentLang][key];
@@ -546,7 +571,7 @@ function buildHelp(){
     ${grid(l('helpCmdsBasic'))}
     <div class="sg-label" style="margin-top:24px;margin-bottom:6px">${e(l('helpSectionData'))}</div>
     ${grid(l('helpCmdsData'))}
-    <p style="color:var(--mu);font-size:12px;margin-top:12px">${e(l('helpFooter'))}</p>`;
+    <p class="help-footer-hint" style="color:var(--mu);font-size:12px;margin-top:12px">${e(l('helpFooter'))}</p>`;
 }
 
 function buildWhoami(){
@@ -735,11 +760,32 @@ async function bootSequence(){
     if(asciiEl.scrollWidth > avail)
       asciiEl.style.fontSize = (8.5 * avail / asciiEl.scrollWidth).toFixed(2)+'px';
   }
+  if(isMobile()) msgsEl.scrollTop = 0;
+}
+
+function isMobile(){ return window.innerWidth<=640; }
+
+function closeMobileSidebar(){
+  const sb=document.getElementById('sidebar');
+  const bd=document.getElementById('sb-backdrop');
+  sb.classList.remove('mobile-open');
+  bd.classList.remove('active');
 }
 
 function toggleSidebar(){
   const sb=document.getElementById('sidebar');
   const open=document.getElementById('sb-open');
+  const bd=document.getElementById('sb-backdrop');
+  if(isMobile()){
+    if(sb.classList.contains('mobile-open')){
+      closeMobileSidebar();
+    } else {
+      sb.classList.remove('collapsed');
+      sb.classList.add('mobile-open');
+      bd.classList.add('active');
+    }
+    return;
+  }
   sb.classList.remove('genie-out','genie-in');
   void sb.offsetWidth;
   if(sb.classList.contains('collapsed')){
@@ -759,6 +805,47 @@ function toggleSidebar(){
 }
 document.getElementById('sb-toggle').addEventListener('click',toggleSidebar);
 document.getElementById('sb-open').addEventListener('click',toggleSidebar);
+document.getElementById('sb-backdrop').addEventListener('click',closeMobileSidebar);
+
+/* ── close sidebar on mobile after nav tap ───── */
+document.querySelectorAll('.nav-item,.sb-btn').forEach(el=>{
+  el.addEventListener('click',()=>{ if(isMobile()) closeMobileSidebar(); });
+});
+
+/* ── mobile init ──────────────────────────────── */
+function syncPlaceholder(){
+  function truncate(full){
+    const canvas=document.createElement('canvas');
+    const ctx=canvas.getContext('2d');
+    ctx.font='16px "JetBrains Mono",monospace';
+    const maxW=inp.clientWidth-4;
+    if(ctx.measureText(full).width<=maxW) return full;
+    let s=full;
+    while(s.length>0&&ctx.measureText(s+'...').width>maxW) s=s.slice(0,-1);
+    return s+'...';
+  }
+  const full=inp.dataset.placeholder||l('placeholder');
+  inp.placeholder=isMobile()?truncate(full):full;
+}
+(function initMobile(){
+  inp.dataset.placeholder=inp.placeholder;
+  if(isMobile()){
+    const sb=document.getElementById('sidebar');
+    const open=document.getElementById('sb-open');
+    sb.classList.add('collapsed');
+    open.style.display='flex';
+  }
+  syncPlaceholder();
+  window.addEventListener('resize',()=>{
+    syncPlaceholder();
+    if(!isMobile()){
+      const sb=document.getElementById('sidebar');
+      const bd=document.getElementById('sb-backdrop');
+      sb.classList.remove('mobile-open');
+      bd.classList.remove('active');
+    }
+  });
+})();
 
 /* ── theme ────────────────────────────────────── */
 function applyTheme(theme){
