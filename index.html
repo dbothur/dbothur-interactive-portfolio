@@ -153,6 +153,10 @@ a:hover{text-decoration:underline}
 .typing span:nth-child(3){animation-delay:.36s}
 @keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-5px);opacity:1}}
 
+/* ── section reveal ──────────────────────────── */
+@keyframes revealIn{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
+.msg-content.reveal{animation:revealIn .28s ease-out forwards}
+
 /* ── theme transition ────────────────────────── */
 html,body,#sidebar,#chat-main,#chat-header,#input-area,#input-box,.card,.nav-item,.bubble,.tag,.sb-btn,.hdr-badge{transition:background-color .18s,color .18s,border-color .18s}
 .theme-switch{display:flex;align-items:center;cursor:pointer;flex-shrink:0;user-select:none}
@@ -611,6 +615,25 @@ function setActiveNav(cmd){
   if(el) el.classList.add('active');
 }
 
+/* ── animated section loader ─────────────────── */
+async function showSection(cmd){
+  const wrap=document.createElement('div');
+  wrap.className='msg-asst';
+  wrap.innerHTML=`<div class="msg-asst-inner">
+    <div class="avatar"><img src="https://github.com/dbothur.png" alt="DB"></div>
+    <div class="msg-body">
+      <div class="msg-sender">Dawid Bothur</div>
+      <div class="msg-content"><div class="typing"><span></span><span></span><span></span></div></div>
+    </div>
+  </div>`;
+  msgsEl.appendChild(wrap); sc();
+  await sleep(520);
+  const content=wrap.querySelector('.msg-content');
+  content.innerHTML=BUILDERS[cmd]();
+  content.classList.add('reveal');
+  sc();
+}
+
 /* ── command dispatch ────────────────────────── */
 const TAB_CMDS=['/about','/contact','/skills','/experience','/education','/languages','/interests','/whoami','/help','/clear','/newchat','/generate-data','/lang'];
 const NAV_CMDS=new Set(['about','contact','skills','experience','education','languages','interests']);
@@ -658,7 +681,7 @@ async function processCmd(raw){
     }
   } else if(BUILDERS[cmd]){
     if(NAV_CMDS.has(cmd)) setActiveNav(cmd);
-    asstMsg(BUILDERS[cmd]());
+    await showSection(cmd);
   } else {
     asstMsg(l('cmdNotFound')(e(full)));
   }
