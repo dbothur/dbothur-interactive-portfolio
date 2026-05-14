@@ -99,11 +99,11 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Inter',s
 #messages::-webkit-scrollbar{width:4px}
 #messages::-webkit-scrollbar-thumb{background:var(--bd);border-radius:2px}
 
-.msg-user{display:flex;justify-content:flex-end;padding:5px 24px}
+.msg-user{display:flex;justify-content:flex-end;padding:5px 24px;max-width:calc(780px + 48px);margin:0 auto;width:100%}
 .bubble{max-width:68%;background:var(--s2);border:1px solid var(--bd);border-radius:18px 18px 4px 18px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--tx);line-height:1.5;word-break:break-word}
 
 .msg-asst{padding:5px 24px}
-.msg-asst-inner{display:flex;gap:12px;align-items:flex-start;max-width:780px}
+.msg-asst-inner{display:flex;gap:12px;align-items:flex-start;max-width:780px;margin:0 auto}
 .avatar{width:32px;height:32px;border-radius:8px;overflow:hidden;flex-shrink:0;margin-top:2px}
 .avatar img{width:100%;height:100%;object-fit:cover;display:block}
 .msg-body{flex:1;min-width:0;padding-top:2px}
@@ -138,13 +138,13 @@ a:hover{text-decoration:underline}
 
 /* ── input ───────────────────────────────────── */
 #input-area{padding:12px 24px 18px;flex-shrink:0}
-#input-box{max-width:780px;background:var(--s2);border:1px solid var(--bd);border-radius:14px;display:flex;align-items:center;gap:8px;padding:10px 12px;transition:border-color .2s}
+#input-box{max-width:780px;margin:0 auto;background:var(--s2);border:1px solid var(--bd);border-radius:14px;display:flex;align-items:center;gap:8px;padding:10px 12px;transition:border-color .2s}
 #input-box:focus-within{border-color:var(--ac)}
 #chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--tx);font-family:'JetBrains Mono',monospace;font-size:13px;resize:none;min-height:22px;max-height:160px;line-height:1.5;caret-color:var(--ac)}
 #chat-input::placeholder{color:var(--mu)}
 #send-btn{width:34px;height:34px;background:var(--ac);border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--btn-tx);font-size:18px;font-weight:700;transition:opacity .15s;line-height:1}
 #send-btn:hover{opacity:.85}
-.input-hint{font-size:11px;color:var(--mu);margin-top:6px;max-width:780px}
+.input-hint{font-size:11px;color:var(--mu);margin-top:6px;max-width:780px;margin-left:auto;margin-right:auto}
 
 /* ── typing ──────────────────────────────────── */
 .typing{display:flex;gap:4px;align-items:center;padding:4px 0}
@@ -468,9 +468,9 @@ function buildAbout(){
 function buildContact(){
   if(!loaded) return noData('contact');
   return `<div class="sec-title">${e(l('contactTitle'))}</div>
-    <div class="irow"><span class="ilabel"><i class="nf nf-fa-envelope"></i> Email</span><a href="mailto:dawidbothur@icloud.com">dawidbothur@icloud.com</a></div>
+    <div class="irow"><span class="ilabel"><i class="nf nf-fa-envelope"></i> Email</span><span class="ival">__EMAIL__</span></div>
     <div class="irow"><span class="ilabel"><i class="nf nf-fa-phone"></i> ${e(l('contactPhoneLabel'))}</span><span class="ival">+__PHONE__</span></div>
-    <div class="irow"><span class="ilabel"><i class="nf nf-fa-map_marker"></i> ${e(l('whoamiLocationLabel'))}</span><span class="ival">${e(l('contactLocation'))}</span></div>
+    <div class="irow"><span class="ilabel"><i class="nf nf-fa-map_marker"></i> ${e(l('whoamiLocationLabel'))}</span><span class="ival">__LOCATION__</span></div>
     <div class="irow"><span class="ilabel"><i class="nf nf-fa-linkedin"></i> LinkedIn</span><a href="https://linkedin.com/in/d-bothur" target="_blank">linkedin.com/in/d-bothur</a></div>
     <div class="irow"><span class="ilabel"><i class="nf nf-fa-github"></i> GitHub</span><a href="https://github.com/dbothur" target="_blank">github.com/dbothur</a></div>`;
 }
