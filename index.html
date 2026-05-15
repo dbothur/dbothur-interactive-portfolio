@@ -232,16 +232,16 @@ html,body,#sidebar,#chat-main,#chat-header,#input-area,#input-box,.card,.nav-ite
     <button id="sb-gen-btn" class="sb-btn-gen" onclick="processCmd('/generate-data')" data-testid="generate-data-btn"><span id="sb-gen-icon" class="nav-icon nf nf-cod-database"></span><span id="sb-gen-label">Generate Data</span></button>
 
     <div class="sb-label" id="sb-general-label" data-testid="general-label">General</div>
-    <div class="nav-item" onclick="processCmd('/whoami')" data-testid="nav-whoami"><span class="nav-icon nf nf-fa-id_card"></span><span data-i18n="navWhoami">Who am I</span></div>
-    <div class="nav-item" data-cmd="interests"  onclick="runNav('interests')"  data-testid="nav-interests">  <span class="nav-icon nf nf-fa-heart"></span><span data-i18n="navInterests">Interests</span></div>
+    <div class="nav-item" onclick="showOverlay('whoami')" data-testid="nav-whoami"><span class="nav-icon nf nf-fa-id_card"></span><span data-i18n="navWhoami">Who am I</span></div>
+    <div class="nav-item" data-cmd="interests"  onclick="showOverlay('interests')"  data-testid="nav-interests">  <span class="nav-icon nf nf-fa-heart"></span><span data-i18n="navInterests">Interests</span></div>
 
     <div class="sb-label" id="sb-cv-label" style="margin-top:10px" data-testid="cv-sections-label">CV Sections</div>
-    <div class="nav-item" data-cmd="about"      onclick="runNav('about')"      data-testid="nav-about">      <span class="nav-icon nf nf-fa-user"></span><span data-i18n="navAbout">About Me</span></div>
-    <div class="nav-item" data-cmd="experience" onclick="runNav('experience')" data-testid="nav-experience"> <span class="nav-icon nf nf-fa-briefcase"></span><span data-i18n="navExperience">Experience</span></div>
-    <div class="nav-item" data-cmd="skills"     onclick="runNav('skills')"     data-testid="nav-skills">     <span class="nav-icon nf nf-fa-wrench"></span><span data-i18n="navSkills">Skills</span></div>
-    <div class="nav-item" data-cmd="education"  onclick="runNav('education')"  data-testid="nav-education">  <span class="nav-icon nf nf-fa-graduation_cap"></span><span data-i18n="navEducation">Education</span></div>
-    <div class="nav-item" data-cmd="languages"  onclick="runNav('languages')"  data-testid="nav-languages">  <span class="nav-icon nf nf-fa-language"></span><span data-i18n="navLanguages">Languages</span></div>
-    <div class="nav-item" data-cmd="contact"    onclick="runNav('contact')"    data-testid="nav-contact">    <span class="nav-icon nf nf-fa-envelope"></span><span data-i18n="navContact">Contact</span></div>
+    <div class="nav-item" data-cmd="about"      onclick="showOverlay('about')"      data-testid="nav-about">      <span class="nav-icon nf nf-fa-user"></span><span data-i18n="navAbout">About Me</span></div>
+    <div class="nav-item" data-cmd="experience" onclick="showOverlay('experience')" data-testid="nav-experience"> <span class="nav-icon nf nf-fa-briefcase"></span><span data-i18n="navExperience">Experience</span></div>
+    <div class="nav-item" data-cmd="skills"     onclick="showOverlay('skills')"     data-testid="nav-skills">     <span class="nav-icon nf nf-fa-wrench"></span><span data-i18n="navSkills">Skills</span></div>
+    <div class="nav-item" data-cmd="education"  onclick="showOverlay('education')"  data-testid="nav-education">  <span class="nav-icon nf nf-fa-graduation_cap"></span><span data-i18n="navEducation">Education</span></div>
+    <div class="nav-item" data-cmd="languages"  onclick="showOverlay('languages')"  data-testid="nav-languages">  <span class="nav-icon nf nf-fa-language"></span><span data-i18n="navLanguages">Languages</span></div>
+    <div class="nav-item" data-cmd="contact"    onclick="showOverlay('contact')"    data-testid="nav-contact">    <span class="nav-icon nf nf-fa-envelope"></span><span data-i18n="navContact">Contact</span></div>
 
     <div class="sb-footer" data-testid="sidebar-footer">
       <button class="sb-btn" onclick="showHelpOverlay()" data-testid="help-btn"><span class="nav-icon nf nf-fa-question_circle"></span><span data-i18n="navHelp">Help</span></button>
@@ -677,14 +677,40 @@ function buildOverlayContent(){
         <div class="ov-cmd">Tab</div><div class="ov-desc">${pl?'autouzupełnianie':'autocomplete'}</div>
         <div class="ov-cmd">Shift+Enter</div><div class="ov-desc">${pl?'nowa linia':'new line'}</div>
       </div>
-    </div>`;
+    </div>
+    `;
 }
 
-function showHelpOverlay(){
-  document.getElementById('ov-title').textContent = l('overlayTitle');
-  document.getElementById('ov-body').innerHTML = buildOverlayContent();
-document.getElementById('help-overlay').classList.add('visible');
+const OV_TITLES = {
+  help:       ()=>l('overlayTitle'),
+  whoami:     ()=>l('navWhoami'),
+  interests:  ()=>l('navInterests'),
+  about:      ()=>l('navAbout'),
+  experience: ()=>l('navExperience'),
+  education:  ()=>l('navEducation'),
+  skills:     ()=>l('navSkills'),
+  languages:  ()=>l('navLanguages'),
+  contact:    ()=>l('navContact'),
+};
+
+function showOverlay(cmd){
+  const titleFn = OV_TITLES[cmd];
+  document.getElementById('ov-title').textContent = titleFn ? titleFn() : cmd;
+  let body;
+  if(cmd === 'help'){
+    body = buildOverlayContent();
+  } else {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = BUILDERS[cmd] ? BUILDERS[cmd]() : '';
+    const secTitle = tmp.querySelector('.sec-title');
+    if(secTitle) secTitle.remove();
+    body = tmp.innerHTML;
+  }
+  document.getElementById('ov-body').innerHTML = body;
+  document.getElementById('help-overlay').classList.add('visible');
 }
+
+function showHelpOverlay(){ showOverlay('help'); }
 
 function hideHelpOverlay(){
   document.getElementById('help-overlay').classList.remove('visible');
