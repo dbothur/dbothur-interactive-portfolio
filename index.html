@@ -278,13 +278,13 @@ html,body,#sidebar,#chat-main,#chat-header,#input-area,#input-box,.card,.nav-ite
     </div>
   </main>
 </div>
-<div id="sb-backdrop"></div>
+<div id="sb-backdrop" data-testid="sidebar-backdrop"></div>
 
-<div id="help-overlay">
-  <div id="help-panel">
-    <div class="ov-title" id="ov-title"></div>
-    <button id="help-close" onclick="hideHelpOverlay()">✕</button>
-    <div id="ov-body"></div>
+<div id="help-overlay" data-testid="help-overlay">
+  <div id="help-panel" data-testid="help-panel">
+    <div class="ov-title" id="ov-title" data-testid="overlay-title"></div>
+    <button id="help-close" onclick="hideHelpOverlay()" data-testid="help-close-btn">✕</button>
+    <div id="ov-body" data-testid="overlay-body"></div>
   </div>
 </div>
 
