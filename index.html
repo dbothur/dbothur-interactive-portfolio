@@ -244,7 +244,7 @@ html,body,#sidebar,#chat-main,#chat-header,#input-area,#input-box,.card,.nav-ite
     <div class="nav-item" data-cmd="contact"    onclick="runNav('contact')"    data-testid="nav-contact">    <span class="nav-icon nf nf-fa-envelope"></span><span data-i18n="navContact">Contact</span></div>
 
     <div class="sb-footer" data-testid="sidebar-footer">
-      <button class="sb-btn" onclick="runNav('help')" data-testid="help-btn"><span class="nav-icon nf nf-fa-question_circle"></span><span data-i18n="navHelp">Help</span></button>
+      <button class="sb-btn" onclick="showHelpOverlay()" data-testid="help-btn"><span class="nav-icon nf nf-fa-question_circle"></span><span data-i18n="navHelp">Help</span></button>
     </div>
   </aside>
 
@@ -761,8 +761,6 @@ async function processCmd(raw){
     } else {
       asstMsg(l('langInvalid'));
     }
-  } else if(cmd==='help'){
-    showHelpOverlay();
   } else if(BUILDERS[cmd]){
     if(NAV_CMDS.has(cmd)) setActiveNav(cmd);
     await showSection(cmd);
