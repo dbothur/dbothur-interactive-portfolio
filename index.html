@@ -80,7 +80,6 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Inter',s
 .nav-item.active{background:var(--acd);color:var(--ac)}
 .nav-icon{font-size:14px;width:18px;text-align:center}
 .sb-footer{margin-top:auto;padding-top:12px;border-top:1px solid var(--bd)}
-.sb-hint{font-size:11px;color:var(--mu);padding:6px 10px;line-height:1.9}
 
 /* ── main ────────────────────────────────────── */
 #chat-main{flex:1;min-width:0;display:flex;flex-direction:column}
@@ -148,7 +147,6 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Inter',s
 .ov-grid{display:grid;grid-template-columns:max-content 1fr;gap:1px 16px}
 .ov-cmd{color:var(--yw);font-family:'JetBrains Mono',monospace;font-size:12px;padding:2px 0}
 .ov-desc{color:var(--mu);font-size:12px;padding:2px 0}
-.ov-footer{margin-top:14px;padding-top:12px;border-top:1px solid var(--bd);font-size:11px;color:var(--mu);text-align:center;font-family:'JetBrains Mono',monospace;letter-spacing:.04em}
 @media(max-width:640px){#help-panel{padding:18px 16px}.ov-keyboard{display:none}}
 a{color:var(--bl);text-decoration:none}
 a:hover{text-decoration:underline}
@@ -310,7 +308,6 @@ const T = {
     navClear:'Wyczyść czat',
     navAbout:'O mnie', navExperience:'Doświadczenie', navSkills:'Umiejętności',
     navEducation:'Wykształcenie', navLanguages:'Języki', navContact:'Kontakt', navInterests:'Zainteresowania', navHelp:'Pomoc',
-    sidebarHint:'Wpisz <code style="color:var(--yw)">/help</code> po komendy<br><code style="color:var(--yw)">/generate-data</code><br>aby załadować dane',
     placeholder:'Wpisz komendę żeby dowiedzieć się czegoś na temat Dawida…',
     inputHint:'Enter aby wysłać \xb7 Shift+Enter nowa linia \xb7 Tab autouzupełnienie',
 
@@ -390,7 +387,6 @@ const T = {
     navClear:'Clear Chat',
     navAbout:'About Me', navExperience:'Experience', navSkills:'Skills',
     navEducation:'Education', navLanguages:'Languages', navContact:'Contact', navInterests:'Interests', navHelp:'Help',
-    sidebarHint:'Type <code style="color:var(--yw)">/help</code> for commands<br><code style="color:var(--yw)">/generate-data</code><br>to load data',
     placeholder:'Type a command to get some info about Dawid…',
     inputHint:'Enter to send \xb7 Shift+Enter new line \xb7 Tab autocomplete',
 
@@ -796,7 +792,6 @@ async function processCmd(raw){
   sc();
 }
 
-function runNav(cmd){ hist.unshift('/'+cmd); hidx=-1; processCmd('/'+cmd); }
 function cmdReboot(){ processCmd('/newchat'); }
 
 /* ── input events ────────────────────────────── */
@@ -932,8 +927,10 @@ function syncPlaceholder(){
     if(!isMobile()){
       const sb=document.getElementById('sidebar');
       const bd=document.getElementById('sb-backdrop');
-      sb.classList.remove('mobile-open');
+      const open=document.getElementById('sb-open');
+      sb.classList.remove('mobile-open','collapsed','genie-out','genie-in');
       bd.classList.remove('active');
+      open.style.display='none';
     }
   });
 })();
