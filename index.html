@@ -133,6 +133,23 @@ html,body{height:100%;background:var(--bg);color:var(--tx);font-family:'Inter',s
 .help-grid{display:grid;grid-template-columns:max-content 1fr;gap:2px 20px;font-size:13px}
 .hcmd{color:var(--yw);font-family:'JetBrains Mono',monospace;padding:3px 0}
 .hdesc{color:var(--mu);padding:3px 0}
+
+/* ── help overlay ────────────────────────────── */
+#help-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:200;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);opacity:0;transition:opacity .22s;pointer-events:none}
+#help-overlay.visible{opacity:1;pointer-events:all}
+#help-panel{background:var(--sb);border:1px solid var(--bd);border-radius:14px;padding:24px 28px;max-width:480px;width:90%;max-height:85vh;overflow-y:auto;scrollbar-width:none;-ms-overflow-style:none;box-shadow:0 24px 64px rgba(0,0,0,.55);position:relative}
+#help-panel::-webkit-scrollbar{display:none}
+#help-overlay.visible #help-panel{animation:revealIn .25s ease-out}
+.ov-title{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--yw);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--bd)}
+#help-close{position:absolute;top:14px;right:14px;background:transparent;border:none;color:var(--mu);cursor:pointer;font-size:16px;line-height:1;padding:4px 6px;border-radius:6px;transition:color .15s}
+#help-close:hover{color:var(--tx)}
+.ov-intro{font-size:13px;color:var(--mu);margin-bottom:20px;line-height:1.6}
+.ov-section{font-size:10px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.08em;margin:12px 0 5px}
+.ov-grid{display:grid;grid-template-columns:max-content 1fr;gap:1px 16px}
+.ov-cmd{color:var(--yw);font-family:'JetBrains Mono',monospace;font-size:12px;padding:2px 0}
+.ov-desc{color:var(--mu);font-size:12px;padding:2px 0}
+.ov-footer{margin-top:14px;padding-top:12px;border-top:1px solid var(--bd);font-size:11px;color:var(--mu);text-align:center;font-family:'JetBrains Mono',monospace;letter-spacing:.04em}
+@media(max-width:640px){#help-panel{padding:18px 16px}.ov-keyboard{display:none}}
 a{color:var(--bl);text-decoration:none}
 a:hover{text-decoration:underline}
 
@@ -140,7 +157,8 @@ a:hover{text-decoration:underline}
 #input-area{padding:12px 24px 18px;flex-shrink:0}
 #input-box{max-width:780px;margin:0 auto;background:var(--s2);border:1px solid var(--bd);border-radius:14px;display:flex;align-items:center;gap:8px;padding:10px 12px;transition:border-color .2s}
 #input-box:focus-within{border-color:var(--ac)}
-#chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--tx);font-family:'JetBrains Mono',monospace;font-size:13px;resize:none;min-height:22px;max-height:160px;line-height:1.5;caret-color:var(--ac)}
+#chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--tx);font-family:'JetBrains Mono',monospace;font-size:13px;resize:none;min-height:22px;max-height:160px;line-height:1.5;caret-color:var(--ac);scrollbar-width:none;-ms-overflow-style:none}
+#chat-input::-webkit-scrollbar{display:none}
 #chat-input::placeholder{color:var(--mu)}
 #send-btn{width:34px;height:34px;background:var(--ac);border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--btn-tx);font-size:18px;font-weight:700;transition:opacity .15s;line-height:1}
 #send-btn:hover{opacity:.85}
@@ -262,6 +280,14 @@ html,body,#sidebar,#chat-main,#chat-header,#input-area,#input-box,.card,.nav-ite
 </div>
 <div id="sb-backdrop"></div>
 
+<div id="help-overlay">
+  <div id="help-panel">
+    <div class="ov-title" id="ov-title"></div>
+    <button id="help-close" onclick="hideHelpOverlay()">✕</button>
+    <div id="ov-body"></div>
+  </div>
+</div>
+
 <script>
 const msgsEl = document.getElementById('messages');
 const inp    = document.getElementById('chat-input');
@@ -270,6 +296,7 @@ const sendEl = document.getElementById('send-btn');
 let loaded = false;
 let currentLang = 'pl';
 let hist = [], hidx = -1;
+let firstLoad = true;
 
 /* ── translations ────────────────────────────── */
 const T = {
@@ -349,6 +376,9 @@ const T = {
     langSwitchedTo:'<p style="color:var(--gn)">Język zmieniony na <strong>Polski</strong>.</p>',
     langCurrent:(lang)=>`<p style="color:var(--mu)">Aktualny język: <strong>${lang==='pl'?'Polski':'English'}</strong>. Użyj <code style="color:var(--yw)">/lang pl</code> lub <code style="color:var(--yw)">/lang en</code>.</p>`,
     langInvalid:'<p style="color:var(--rd)">Nieprawidłowy język. Użyj: <code style="color:var(--yw)">/lang pl</code> lub <code style="color:var(--yw)">/lang en</code>.</p>',
+    overlayTitle:'Jak korzystać z portfolio',
+    overlayIntro:'Portfolio w stylu terminala. Wpisz komendę lub kliknij sekcję w panelu bocznym.',
+    overlayDismiss:'Naciśnij Escape lub kliknij poza oknem, aby zamknąć',
   },
   en: {
     newChat:'New Chat',
@@ -426,6 +456,9 @@ const T = {
     langSwitchedTo:'<p style="color:var(--gn)">Language switched to <strong>English</strong>.</p>',
     langCurrent:(lang)=>`<p style="color:var(--mu)">Current language: <strong>${lang==='pl'?'Polski':'English'}</strong>. Use <code style="color:var(--yw)">/lang pl</code> or <code style="color:var(--yw)">/lang en</code>.</p>`,
     langInvalid:'<p style="color:var(--rd)">Invalid language. Use: <code style="color:var(--yw)">/lang pl</code> or <code style="color:var(--yw)">/lang en</code>.</p>',
+    overlayTitle:'How to use this portfolio',
+    overlayIntro:'A terminal-style portfolio. Type a command or click a section in the sidebar.',
+    overlayDismiss:'Press Escape or click outside to close',
   }
 };
 
@@ -630,6 +663,33 @@ async function cmdNpx(){
   });
 }
 
+/* ── help overlay ────────────────────────────── */
+function buildOverlayContent(){
+  const pl = currentLang === 'pl';
+  const grid = rows => `<div class="ov-grid">${rows.map(([c,d])=>`<div class="ov-cmd">${e(c)}</div><div class="ov-desc">${e(d)}</div>`).join('')}</div>`;
+  return `<p class="ov-intro">${e(l('overlayIntro'))}</p>
+    <div class="ov-section">${pl?'Komendy':'Commands'}</div>
+    ${grid([...l('helpCmdsBasic'),...l('helpCmdsData')])}
+    <div class="ov-keyboard">
+      <div class="ov-section">${pl?'Skróty klawiszowe':'Keyboard'}</div>
+      <div class="ov-grid">
+        <div class="ov-cmd">↑ / ↓</div><div class="ov-desc">${pl?'historia komend':'command history'}</div>
+        <div class="ov-cmd">Tab</div><div class="ov-desc">${pl?'autouzupełnianie':'autocomplete'}</div>
+        <div class="ov-cmd">Shift+Enter</div><div class="ov-desc">${pl?'nowa linia':'new line'}</div>
+      </div>
+    </div>`;
+}
+
+function showHelpOverlay(){
+  document.getElementById('ov-title').textContent = l('overlayTitle');
+  document.getElementById('ov-body').innerHTML = buildOverlayContent();
+document.getElementById('help-overlay').classList.add('visible');
+}
+
+function hideHelpOverlay(){
+  document.getElementById('help-overlay').classList.remove('visible');
+}
+
 /* ── nav highlight ───────────────────────────── */
 function setActiveNav(cmd){
   document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
@@ -701,6 +761,8 @@ async function processCmd(raw){
     } else {
       asstMsg(l('langInvalid'));
     }
+  } else if(cmd==='help'){
+    showHelpOverlay();
   } else if(BUILDERS[cmd]){
     if(NAV_CMDS.has(cmd)) setActiveNav(cmd);
     await showSection(cmd);
@@ -763,6 +825,7 @@ async function bootSequence(){
       asciiEl.style.fontSize = (8.5 * avail / asciiEl.scrollWidth).toFixed(2)+'px';
   }
   if(isMobile()) msgsEl.scrollTop = 0;
+  if(firstLoad){ firstLoad = false; setTimeout(showHelpOverlay, 700); }
 }
 
 function isMobile(){ return window.innerWidth<=640; }
@@ -808,6 +871,8 @@ function toggleSidebar(){
 document.getElementById('sb-toggle').addEventListener('click',toggleSidebar);
 document.getElementById('sb-open').addEventListener('click',toggleSidebar);
 document.getElementById('sb-backdrop').addEventListener('click',closeMobileSidebar);
+document.getElementById('help-overlay').addEventListener('click',function(e){ if(e.target===this) hideHelpOverlay(); });
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') hideHelpOverlay(); });
 
 /* ── close sidebar on mobile after nav tap ───── */
 document.querySelectorAll('.nav-item,.sb-btn').forEach(el=>{
